@@ -18,14 +18,16 @@ public:
     ~MainWindow();
 
 signals:
-    void messageRecieved();
+    void messageFinished();
 
 private slots:
     void messageStream();
     void setupSerial(QString portName, int baudrate);
+    void messageReceived();
 
 
 private:
+    const QString END_MESSAGE = "!";
     Ui::MainWindow *ui;
     QSerialPort serialPort;
     QSerialPortInfo info;

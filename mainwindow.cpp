@@ -8,12 +8,16 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-
+     connect(this,SIGNAL(messageFinished()),this,SLOT(messageReceived()));
     // Ports
     QList<QSerialPortInfo> ports = info.availablePorts();
     foreach(auto &x,ports)
         qDebug()<<x.portName();
-    setupSerial(ports[0].portName(), 2560000);
+    if(ports.length() == 0){
+        qDebug() << "Please Insert RS485 usb stick!";
+        exit(EXIT_FAILURE);
+    }
+    setupSerial(ports[1].portName(), 256000);
 }
 
 MainWindow::~MainWindow()
@@ -28,10 +32,13 @@ void MainWindow::messageStream()
     if(data == ""){
         return;
     }
-    data.replace('!', '\n');
-    printf(("\r"+data).toStdString().c_str());
-
-
+    for(int i=0; i<data.length();i++){
+        if(data[i] == END_MESSAGE){
+            emit messageFinished();
+        }else{
+            buffer = buffer +  data[i];
+        }
+    }
 }
 
 void MainWindow::setupSerial(QString portName, int baudrate){
@@ -39,7 +46,7 @@ void MainWindow::setupSerial(QString portName, int baudrate){
     serialPort.open(QIODevice::ReadWrite);
     if(!serialPort.isOpen()){
         qDebug() << "!!!! Something went Wrong !!!!";
-        QApplication::quit();
+        exit(EXIT_FAILURE);
     }
     serialPort.setBaudRate(baudrate);
     serialPort.setDataBits(QSerialPort::Data8);
@@ -48,5 +55,11 @@ void MainWindow::setupSerial(QString portName, int baudrate){
     serialPort.setFlowControl(QSerialPort::NoFlowControl);
     qDebug() << "Connected";
     connect(&serialPort,SIGNAL(readyRead()),this,SLOT(messageStream()));
+}
+
+void MainWindow::messageReceived()
+{
+    qDebug() << buffer;
+    buffer = "";
 }
 
