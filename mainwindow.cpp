@@ -8,15 +8,17 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    connect(this,SIGNAL(messageFinished()),this,SLOT(messageReceived()));
+    connect(this,SIGNAL(MessageFinished()),this,SLOT(MessageReceived()));
     tabWidget = ui->tabWidget;
-    connect(tabWidget, SIGNAL(currentChanged(int)), this, (SLOT(tabchange(int))));
+    connect(tabWidget, SIGNAL(currentChanged(int)), this, (SLOT(TabChange(int))));
 
-    start = new StartWidget();
+    startWidgets[0] = new StartWidget();
+    connect(startWidgets[0], SIGNAL(ComPortSelected(QString)), this, SLOT(InitMixer(QString)));
+
 
     int currentIndex = ui->tabWidget->currentIndex();
     ui->tabWidget->removeTab(currentIndex);
-    ui->tabWidget->insertTab(currentIndex, start, "Mixer 1");
+    ui->tabWidget->insertTab(currentIndex, startWidgets[0], "Mixer 1");
     ui->tabWidget->setCurrentIndex(currentIndex);
 //     vLayoutRPM = ui->vLayoutRPM;
 //     QLineSeries* series = new QLineSeries();
@@ -46,7 +48,7 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::messageStream()
+void MainWindow::MessageStream()
 {
     QByteArray dataBA = serialPort.readAll();
     QString data(dataBA);
@@ -55,14 +57,14 @@ void MainWindow::messageStream()
     }
     for(int i=0; i<data.length();i++){
         if(data[i] == END_MESSAGE){
-            emit messageFinished();
+            emit MessageFinished();
         }else{
             buffer = buffer +  data[i];
         }
     }
 }
 
-void MainWindow::setupSerial(QString portName, int baudrate){
+void MainWindow::SetupSerial(QString portName, int baudrate){
     serialPort.setPortName(portName);
     serialPort.open(QIODevice::ReadWrite);
     if(!serialPort.isOpen()){
@@ -78,16 +80,32 @@ void MainWindow::setupSerial(QString portName, int baudrate){
     connect(&serialPort,SIGNAL(readyRead()),this,SLOT(messageStream()));
 }
 
-void MainWindow::messageReceived()
+void MainWindow::MessageReceived()
 {
     qDebug() << buffer;
     buffer = "";
 }
 
-void MainWindow::tabchange(int i)
+void MainWindow::TabChange(int i)
 {
-//    tabCount++;
-//    tabWidget->insertTab(tabCount-1, )
-    qDebug() << i;
+    if(i == tabCount){
+        if(tabCount != MAX_TABS){
+            startWidgets[tabCount] = new StartWidget();
+            connect(startWidgets[tabCount], SIGNAL(comPortSelected(QString)), this, SLOT(initMixer(QString)));
+            tabWidget->insertTab(tabCount, startWidgets[tabCount], QString("Mixer%1").arg(tabCount+1));
+            tabCount++;
+            tabWidget->setCurrentIndex(++currentTab);
+        } else {
+            tabWidget->setCurrentIndex(currentTab);
+        }
+    } else{
+        currentTab = i;
+    }
+}
+
+void MainWindow::InitMixer(QString)
+{
+    initWidgets[currentTab] = new InitWidget();
+    connect(initWidgets[currentTab], SIGNAL(start), this, SLOT(start));
 }
 

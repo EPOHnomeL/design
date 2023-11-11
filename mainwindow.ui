@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>850</width>
-    <height>650</height>
+    <width>851</width>
+    <height>663</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -68,6 +68,12 @@
      </item>
      <item>
       <widget class="QTabWidget" name="tabWidget">
+       <property name="font">
+        <font>
+         <family>MS Shell Dlg 2</family>
+         <pointsize>13</pointsize>
+        </font>
+       </property>
        <property name="currentIndex">
         <number>0</number>
        </property>
@@ -91,7 +97,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>850</width>
+     <width>851</width>
      <height>17</height>
     </rect>
    </property>

@@ -20,6 +20,8 @@ public:
     explicit StartWidget(QWidget *parent = nullptr);
     ~StartWidget();
 
+public slots:
+    void currentChanged(QString);
 
 signals:
     void comPortSelected(QString);
