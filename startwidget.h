@@ -21,10 +21,10 @@ public:
     ~StartWidget();
 
 public slots:
-    void currentChanged(QString);
+    void CurrentChanged(QString);
 
 signals:
-    void comPortSelected(QString);
+    void ComPortSelected(QString);
 
 private:
     Ui::StartWidget *ui;

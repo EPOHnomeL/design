@@ -22,16 +22,19 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+    QList<QSerialPortInfo> getAvailablePorts();
+    static MainWindow* findMainWindow();
 
 signals:
-    void messageFinished();
+    void MessageFinished();
 
 private slots:
-    void messageStream();
-    void setupSerial(QString portName, int baudrate);
-    void messageReceived();
-    void tabchange(int);
-    void init(QString);
+    void MessageStream();
+    void SetupSerial(QString portName, int baudrate);
+    void MessageReceived();
+    void TabChange(int);
+    void InitMixer(QString);
+    void Start();
 
 private:
     const static int MAX_TABS = 5;
@@ -43,9 +46,12 @@ private:
     QSerialPortInfo info;
     QString buffer;
     QTabWidget *tabWidget;
+    QList<QSerialPortInfo> availablePorts;
 
     StartWidget *startWidgets[MAX_TABS];
     InitWidget *initWidgets[MAX_TABS];
+
+    void switchWidgets(QWidget *w);
 
 };
 #endif // MAINWINDOW_H

@@ -12,6 +12,8 @@ MainWindow::MainWindow(QWidget *parent)
     tabWidget = ui->tabWidget;
     connect(tabWidget, SIGNAL(currentChanged(int)), this, (SLOT(TabChange(int))));
 
+    availablePorts = info.availablePorts();
+
     startWidgets[0] = new StartWidget();
     connect(startWidgets[0], SIGNAL(ComPortSelected(QString)), this, SLOT(InitMixer(QString)));
 
@@ -46,6 +48,11 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+QList<QSerialPortInfo> MainWindow::getAvailablePorts()
+{
+    return availablePorts;
 }
 
 void MainWindow::MessageStream()
@@ -91,10 +98,10 @@ void MainWindow::TabChange(int i)
     if(i == tabCount){
         if(tabCount != MAX_TABS){
             startWidgets[tabCount] = new StartWidget();
-            connect(startWidgets[tabCount], SIGNAL(comPortSelected(QString)), this, SLOT(initMixer(QString)));
-            tabWidget->insertTab(tabCount, startWidgets[tabCount], QString("Mixer%1").arg(tabCount+1));
+            connect(startWidgets[tabCount], SIGNAL(ComPortSelected(QString)), this, SLOT(InitMixer(QString)));
+            tabWidget->insertTab(tabCount, startWidgets[tabCount], QString("Mixer %1").arg(tabCount+1));
             tabCount++;
-            tabWidget->setCurrentIndex(++currentTab);
+            tabWidget->setCurrentIndex(tabCount-1);
         } else {
             tabWidget->setCurrentIndex(currentTab);
         }
@@ -103,9 +110,38 @@ void MainWindow::TabChange(int i)
     }
 }
 
-void MainWindow::InitMixer(QString)
+void MainWindow::InitMixer(QString comPort)
 {
-    initWidgets[currentTab] = new InitWidget();
-    connect(initWidgets[currentTab], SIGNAL(start), this, SLOT(start));
+    for(int i=0;i<availablePorts.size();i++){
+        if(availablePorts[i].portName() == comPort){
+            availablePorts.removeAt(i);
+        }
+    }
+    initWidgets[currentTab] = new InitWidget(comPort);
+    connect(initWidgets[currentTab], SIGNAL(Start()), this, SLOT(Start()));
+    switchWidgets(initWidgets[currentTab]);
+}
+
+void MainWindow::Start()
+{
+
+}
+
+void MainWindow::switchWidgets(QWidget *w)
+{
+    ui->tabWidget->removeTab(currentTab);
+    ui->tabWidget->insertTab(currentTab, w,  QString("Mixer %1").arg(currentTab+1));
+    ui->tabWidget->setCurrentIndex(currentTab);
+}
+
+MainWindow* MainWindow::findMainWindow()
+{
+    for(QWidget* pWidget : QApplication::topLevelWidgets())
+    {
+        MainWindow *pMainWnd = qobject_cast<MainWindow*>(pWidget);
+        if (pMainWnd)
+           return pMainWnd;
+    }
+    return nullptr;
 }
 

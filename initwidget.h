@@ -15,21 +15,22 @@ class InitWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit InitWidget(QWidget *parent = nullptr);
+    explicit InitWidget(QString comPort, QWidget *parent = nullptr);
     ~InitWidget();
 
 public slots:
     void StartClicked();
     void EditClicked();
     void CreateClicked();
-    void ProfileSelect();
+    void DisconnectClicked();
+    void ProfileSelect(QString);
 
 signals:
-    void start();
+    void Start();
 
 private:
     Ui::InitWidget *ui;
-    QPushButton *startButton, *editProfileButton, *createProfileButton;
+    QPushButton *startButton, *editProfileButton, *createProfileButton, *disconnectButton;
     QLineEdit *profileNameEdit, *mixingSpeedEdit, *mixingTimeEdit, *mixingRatioEdit;
     QComboBox *profilesBox;
     QLabel *statusLabel;
