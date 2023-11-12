@@ -10,6 +10,7 @@ using namespace QtCharts;
 #include <QChartView>
 #include "startwidget.h"
 #include "initwidget.h"
+#include "serial.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -25,13 +26,8 @@ public:
     QList<QString> getAvailablePorts();
     static MainWindow* findMainWindow();
 
-signals:
-    void MessageFinished();
 
 private slots:
-    void MessageStream();
-    void SetupSerial(QString portName, int baudrate);
-    void MessageReceived();
     void TabChange(int);
     void InitMixer(QString);
     void Start();
@@ -39,20 +35,16 @@ private slots:
 
 private:
     const static int MAX_TABS = 5;
-    const QString END_MESSAGE = "!";
     Ui::MainWindow *ui;
     int tabCount = 1;
     int currentTab = 0;
-    QSerialPort serialPort;
-    QSerialPortInfo info;
-    QString buffer;
     QTabWidget *tabWidget;
     QList<QString> availablePorts;
 
     StartWidget *startWidgets[MAX_TABS];
     InitWidget *initWidgets[MAX_TABS];
-
-    void switchWidgets(QWidget *w);
+    QSerialPortInfo info;
+    void switchWidgets(QWidget *w, QString name ="");
 
 };
 #endif // MAINWINDOW_H

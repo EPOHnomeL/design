@@ -44,6 +44,7 @@ private:
     QString comPort;
     QList<Profile> profiles;
     bool editing = false;
+    QString prevProfileName ="";
 
 };
 

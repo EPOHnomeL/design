@@ -8,7 +8,6 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    connect(this,SIGNAL(MessageFinished()),this,SLOT(MessageReceived()));
     tabWidget = ui->tabWidget;
     connect(tabWidget, SIGNAL(currentChanged(int)), this, (SLOT(TabChange(int))));
 
@@ -16,6 +15,7 @@ MainWindow::MainWindow(QWidget *parent)
     for(int i=0; i<allPorts.size();i++){
         availablePorts.append(allPorts[i].portName());
     }
+
     startWidgets[0] = new StartWidget();
     connect(startWidgets[0], SIGNAL(ComPortSelected(QString)), this, SLOT(InitMixer(QString)));
 
@@ -35,16 +35,6 @@ MainWindow::MainWindow(QWidget *parent)
 //     QChartView *chartView = new QChartView(chart);
 //     chartView->setRenderHint(QPainter::Antialiasing);
 //     vLayoutRPM->addWidget(chartView);
-
-    // Ports
-//    QList<QSerialPortInfo> ports = info.availablePorts();
-//    foreach(auto &x,ports)
-//        qDebug()<<x.portName();
-//    if(ports.length() == 0){
-//        qDebug() << "Please Insert RS485 usb stick!";
-//        exit(EXIT_FAILURE);
-//    }
-//    setupSerial(ports[1].portName(), 256000);
 }
 
 MainWindow::~MainWindow()
@@ -55,44 +45,6 @@ MainWindow::~MainWindow()
 QList<QString> MainWindow::getAvailablePorts()
 {
     return availablePorts;
-}
-
-void MainWindow::MessageStream()
-{
-    QByteArray dataBA = serialPort.readAll();
-    QString data(dataBA);
-    if(data == ""){
-        return;
-    }
-    for(int i=0; i<data.length();i++){
-        if(data[i] == END_MESSAGE){
-            emit MessageFinished();
-        }else{
-            buffer = buffer +  data[i];
-        }
-    }
-}
-
-void MainWindow::SetupSerial(QString portName, int baudrate){
-    serialPort.setPortName(portName);
-    serialPort.open(QIODevice::ReadWrite);
-    if(!serialPort.isOpen()){
-        qDebug() << "!!!! Something went Wrong !!!!";
-        exit(EXIT_FAILURE);
-    }
-    serialPort.setBaudRate(baudrate);
-    serialPort.setDataBits(QSerialPort::Data8);
-    serialPort.setStopBits(QSerialPort::OneStop);
-    serialPort.setParity(QSerialPort::NoParity);
-    serialPort.setFlowControl(QSerialPort::NoFlowControl);
-    qDebug() << "Connected";
-    connect(&serialPort,SIGNAL(readyRead()),this,SLOT(messageStream()));
-}
-
-void MainWindow::MessageReceived()
-{
-    qDebug() << buffer;
-    buffer = "";
 }
 
 void MainWindow::TabChange(int i)
@@ -108,12 +60,12 @@ void MainWindow::TabChange(int i)
             tabWidget->setCurrentIndex(currentTab);
         }
     } else{
+        currentTab = i;
         if(QString(typeid(tabWidget->currentWidget()).name()).compare("StartWidget")){
-            if(startWidgets[currentTab] && startWidgets[currentTab]->getComPorts()->currentIndex() ==0){
+            if(startWidgets[currentTab] && startWidgets[currentTab]->getComPorts()->count() == 1){
                 startWidgets[currentTab]->Reset();
             }
         }
-        currentTab = i;
     }
 }
 
@@ -127,7 +79,7 @@ void MainWindow::InitMixer(QString comPort)
     initWidgets[currentTab] = new InitWidget(comPort);
     connect(initWidgets[currentTab], SIGNAL(Start()), this, SLOT(Start()));
     connect(initWidgets[currentTab], SIGNAL(Disconnect(QString)), this, SLOT(Disconnect(QString)));
-    switchWidgets(initWidgets[currentTab]);
+    switchWidgets(initWidgets[currentTab], comPort);
 }
 
 void MainWindow::Start()
@@ -142,10 +94,10 @@ void MainWindow::Disconnect(QString portName)
     switchWidgets(startWidgets[currentTab]);
 }
 
-void MainWindow::switchWidgets(QWidget *w)
+void MainWindow::switchWidgets(QWidget *w, QString name)
 {
     ui->tabWidget->removeTab(currentTab);
-    ui->tabWidget->insertTab(currentTab, w,  QString("Mixer %1").arg(currentTab+1));
+    ui->tabWidget->insertTab(currentTab, w,  QString("Mixer %1%2").arg(currentTab+1).arg(name==""? "": ": "+name));
     ui->tabWidget->setCurrentIndex(currentTab);
 }
 

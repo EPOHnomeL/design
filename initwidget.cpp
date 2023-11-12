@@ -51,12 +51,51 @@ void InitWidget::StartClicked()
 void InitWidget::EditClicked()
 {
     if(editing){
+        bool isInt;
+        int speedValue = mixingSpeedEdit->text().toInt(&isInt, 10);
+        if(isInt == false)
+            qDebug() << "Speed is not an int";
 
+        bool isFloat;
+        float timeValue = mixingSpeedEdit->text().toFloat(&isFloat);
+        if(isInt == false)
+            qDebug() << "Time is not a float";
+
+        QString ratioValue = mixingRatioEdit->text();
+        QRegExp re("^\\d+:\\d+$");
+        if (!re.exactMatch(ratioValue))
+           qDebug() << "Ratio is not of correct format";
+
+        Profile p = {.name = profileNameEdit->text(), .ratio = ratioValue, .speed = speedValue, .time = timeValue};
+        for(int i=2; i<profilesBox->count();i++){
+            profilesBox->removeItem(i);
+        }
+
+        for(int j=0;j<profiles.count();j++){
+            if(prevProfileName == profiles[j].name){
+                profiles.removeAt(j);
+                profiles.append(p);
+            }
+        }
+
+        for(int k=0; k<profiles.count();k++){
+            profilesBox->addItem(profiles[k].name);
+        }
+        editing = !editing;
+        profileNameEdit->setEnabled(false);
+        mixingSpeedEdit->setEnabled(false);
+        mixingRatioEdit->setEnabled(false);
+        mixingTimeEdit->setEnabled(false);
+        editProfileButton->setText("Edit Profile");
+        profilesBox->setCurrentIndex(0);
     }else{
         profileNameEdit->setEnabled(true);
         mixingSpeedEdit->setEnabled(true);
         mixingRatioEdit->setEnabled(true);
         mixingTimeEdit->setEnabled(true);
+        editProfileButton->setText("Finish Editing Profile");
+        prevProfileName = profileNameEdit->text();
+        editing=!editing;
     }
 
 }
@@ -75,8 +114,8 @@ void InitWidget::CreateClicked()
             qDebug() << "Time is not a float";
 
         QString ratioValue = mixingRatioEdit->text();
-        QRegExp re("^\\d+:\\d+$");  // a digit (\d), zero or more times (*)
-        if (re.exactMatch(ratioValue))
+        QRegExp re("^\\d+:\\d+$");
+        if (!re.exactMatch(ratioValue))
            qDebug() << "Ratio is not of correct format";
 
         Profile p = {.name = profileNameEdit->text(), .ratio = mixingRatioEdit->text(), .speed = speedValue, .time = timeValue};
@@ -87,6 +126,7 @@ void InitWidget::CreateClicked()
         foreach(auto &profile, profiles){
             profilesBox->addItem(profile.name);
         }
+        profilesBox->setCurrentIndex(0);
     }
 }
 
@@ -109,7 +149,7 @@ void InitWidget::ProfileSelect(QString profileName)
         mixingTimeEdit->clear();
         createProfileButton->setEnabled(false);
         editProfileButton->setEnabled(false);
-        break;
+        return;
     case 1:
         profileNameEdit->setEnabled(true);
         mixingSpeedEdit->setEnabled(true);
@@ -121,7 +161,7 @@ void InitWidget::ProfileSelect(QString profileName)
         mixingTimeEdit->clear();
         createProfileButton->setEnabled(true);
         editProfileButton->setEnabled(false);
-        break;
+        return;
     default:
         profileNameEdit->setEnabled(false);
         mixingSpeedEdit->setEnabled(false);
@@ -137,8 +177,8 @@ void InitWidget::ProfileSelect(QString profileName)
             p = profile;
     }
 
-    profileNameEdit->text() = p.name;
-    mixingSpeedEdit->text() = QString("%1").arg(p.speed);
-    mixingRatioEdit->text() = p.ratio;
-    mixingTimeEdit->text() = QString("%1").arg(p.time);
+    profileNameEdit->setText(p.name);
+    mixingSpeedEdit->setText(QString("%1").arg(p.speed));
+    mixingRatioEdit->setText(p.ratio);
+    mixingTimeEdit->setText(QString("%1").arg(p.time));
 }

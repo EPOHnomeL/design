@@ -12,11 +12,13 @@ SOURCES += \
     initwidget.cpp \
     main.cpp \
     mainwindow.cpp \
+    serial.cpp \
     startwidget.cpp
 
 HEADERS += \
     initwidget.h \
     mainwindow.h \
+    serial.h \
     startwidget.h
 
 FORMS += \
