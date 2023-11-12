@@ -3,7 +3,7 @@
 
 Serial::Serial(QString portName, int baudrate, QObject *parent) : QObject(parent)
 {
-    connect(this,SIGNAL(MessageFinished()),this,SLOT(MessageReceived()));
+    connect(this,SIGNAL(MessageFinished(QString)),this,SLOT(MessageReceived(QString)));
     SetupSerial(portName, baudrate);
 }
 
@@ -21,7 +21,8 @@ void Serial::MessageStream()
     }
     for(int i=0; i<data.length();i++){
         if(data[i] == END_MESSAGE){
-            emit MessageFinished();
+            emit MessageFinished(buffer);
+            buffer = "";
         }else{
             buffer = buffer +  data[i];
         }
@@ -44,10 +45,10 @@ void Serial::SetupSerial(QString portName, int baudrate){
     connect(&serialPort,SIGNAL(readyRead()),this,SLOT(MessageStream()));
 }
 
-void Serial::MessageReceived()
+void Serial::MessageReceived(QString)
 {
-    qDebug() << buffer;
-    buffer = "";
+//    qDebug() << buffer;
+//    buffer = "";
 }
 
 const QSerialPort &Serial::getSerialPort() const

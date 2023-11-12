@@ -37,7 +37,7 @@ void StartWidget::Reset()
 
 void StartWidget::CurrentChanged(QString s )
 {
-    if(comPorts->currentIndex() != 0){
+    if(s!= "No mixer found" && s!="Select..."){
         emit ComPortSelected(s);
     }
 }

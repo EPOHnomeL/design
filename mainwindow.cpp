@@ -55,9 +55,6 @@ void MainWindow::TabChange(int i)
         }
     } else{
         currentTab = i;
-        if(QString(typeid(tabWidget->currentWidget()).name()).compare("StartWidget")){
-            startWidgets[currentTab]->Reset();
-        }
     }
 }
 
@@ -78,8 +75,7 @@ void MainWindow::InitMixer(QString comPort)
 void MainWindow::Start(QString comPort)
 {
     activeWidgets[currentTab] = new ActiveWidget(comPort);
-    connect(initWidgets[currentTab], SIGNAL(Start(QString)), this, SLOT(Start(QString)));
-    connect(initWidgets[currentTab], SIGNAL(Disconnect(QString)), this, SLOT(Disconnect(QString)));
+//    connect(getSerialPort(), SIGNAL(MessageFinished(QString)), activeWidgets[currentTab], SLOT(recieveMessage(QString)));
     switchWidgets(activeWidgets[currentTab], comPort);
 }
 

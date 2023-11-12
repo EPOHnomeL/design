@@ -15,12 +15,12 @@ public:
     void disconnect();
 
 signals:
-    void MessageFinished();
+    void MessageFinished(QString);
 
 private slots:
     void MessageStream();
     void SetupSerial(QString portName, int baudrate);
-    void MessageReceived();
+    void MessageReceived(QString);
 
 private:
     const QString END_MESSAGE = "!";

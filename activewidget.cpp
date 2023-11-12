@@ -1,4 +1,6 @@
 #include "activewidget.h"
+#include "mainwindow.h"
+#include <QDebug>
 
 ActiveWidget::ActiveWidget(QString acomPort, QWidget *parent) : QWidget(parent), ui(new Ui::ActiveWidget)
 {
@@ -10,20 +12,65 @@ ActiveWidget::ActiveWidget(QString acomPort, QWidget *parent) : QWidget(parent),
     timeLCD = ui->timeLCD;
     chartLayout = ui->chartLayout;
 
-    QLineSeries* series = new QLineSeries();
-    *series << QPointF(11, 1) << QPointF(13, 3) << QPointF(17, 6) << QPointF(18, 3) << QPointF(20, 2);
-    QChart *chart = new QChart();
+    series = new QLineSeries();
+    chart = new QChart();
     chart->setGeometry(0, 0, 500, 250);
     chart->legend()->hide();
     chart->addSeries(series);
-    chart->createDefaultAxes();
     chart->setTitle("Speed vs Time");
+
+    axisX = new QDateTimeAxis();
+    axisX->setTickCount(5);
+    axisX->setFormat("hh:mm:ss");
+    chart->addAxis(axisX, Qt::AlignBottom);
+    series->attachAxis(axisX);
+
+    axisY = new QValueAxis;
+    chart->addAxis(axisY, Qt::AlignLeft);
+    series->attachAxis(axisY);
+
     QChartView *chartView = new QChartView(chart);
     chartView->setRenderHint(QPainter::Antialiasing);
     chartLayout->addWidget(chartView);
+
+
+    serial = MainWindow::findMainWindow()->getSerialPort();
+    connect(serial, SIGNAL(MessageFinished(QString)), this, SLOT(recieveMessage(QString)));
+
+    // Set up timer to update the chart every 1000 milliseconds (1 second)
+    updateTimer = new QTimer(this);
+    connect(updateTimer, SIGNAL(timeout()), this, SLOT(updateChart()));
+    updateTimer->start(10);
 }
 
 ActiveWidget::~ActiveWidget()
 {
 
+}
+
+void ActiveWidget::recieveMessage(QString s)
+{
+    value = s.toInt()*200/1024;
+}
+
+void ActiveWidget::updateChart()
+{
+
+    QDateTime currentTime = QDateTime::currentDateTime();
+    series->append(currentTime.toMSecsSinceEpoch(), value);
+    speedLCD->display(value);
+    time = time - 0.001f;
+    timeLCD->display(time);
+
+    // Trim data to keep only the last 10 points
+    while (series->count() > 1000)
+    {
+        series->remove(0);
+    }
+
+    // Update the axes to fit the new data
+    axisX->setRange(QDateTime::fromMSecsSinceEpoch(series->at(0).x()),
+                    QDateTime::fromMSecsSinceEpoch(series->at(series->count() - 1).x()));
+    axisY->setRange(0, 200);
+    chart->update();
 }
