@@ -7,6 +7,11 @@ Serial::Serial(QString portName, int baudrate, QObject *parent) : QObject(parent
     SetupSerial(portName, baudrate);
 }
 
+Serial::~Serial()
+{
+    serialPort.close();
+}
+
 void Serial::MessageStream()
 {
     QByteArray dataBA = serialPort.readAll();
@@ -36,11 +41,21 @@ void Serial::SetupSerial(QString portName, int baudrate){
     serialPort.setParity(QSerialPort::NoParity);
     serialPort.setFlowControl(QSerialPort::NoFlowControl);
     qDebug() << "Connected";
-    connect(&serialPort,SIGNAL(readyRead()),this,SLOT(messageStream()));
+    connect(&serialPort,SIGNAL(readyRead()),this,SLOT(MessageStream()));
 }
 
 void Serial::MessageReceived()
 {
     qDebug() << buffer;
     buffer = "";
+}
+
+const QSerialPort &Serial::getSerialPort() const
+{
+    return serialPort;
+}
+
+void Serial::disconnect()
+{
+    serialPort.close();
 }

@@ -1,5 +1,7 @@
 #include "initwidget.h"
 #include <QDebug>
+#include "mainwindow.h"
+
 
 InitWidget::InitWidget(QString acomPort, QWidget *parent) : QWidget(parent), ui(new Ui::InitWidget)
 {
@@ -16,7 +18,7 @@ InitWidget::InitWidget(QString acomPort, QWidget *parent) : QWidget(parent), ui(
     profilesBox = ui->profilesBox;
 
 //    profiles = new QList<Profile>();
-
+    serial = MainWindow::findMainWindow()->getSerialPort();
     comPort = acomPort;
     statusLabel->setText(QString("Status: %1 Connected").arg(acomPort));
 
@@ -45,7 +47,7 @@ InitWidget::~InitWidget()
 
 void InitWidget::StartClicked()
 {
-
+    emit Start(comPort);
 }
 
 void InitWidget::EditClicked()

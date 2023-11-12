@@ -6,6 +6,7 @@
 #include <QLineEdit>
 #include <QPushButton>
 #include "ui_initwidget.h"
+#include "serial.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class InitWidget; }
@@ -32,7 +33,7 @@ public slots:
     void ProfileSelect(QString);
 
 signals:
-    void Start();
+    void Start(QString);
     void Disconnect(QString);
 
 private:
@@ -45,6 +46,7 @@ private:
     QList<Profile> profiles;
     bool editing = false;
     QString prevProfileName ="";
+    Serial *serial;
 
 };
 

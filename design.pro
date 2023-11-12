@@ -9,6 +9,7 @@ CONFIG += c++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    activewidget.cpp \
     initwidget.cpp \
     main.cpp \
     mainwindow.cpp \
@@ -16,12 +17,14 @@ SOURCES += \
     startwidget.cpp
 
 HEADERS += \
+    activewidget.h \
     initwidget.h \
     mainwindow.h \
     serial.h \
     startwidget.h
 
 FORMS += \
+    activewidget.ui \
     initwidget.ui \
     mainwindow.ui \
     startwidget.ui

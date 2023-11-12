@@ -24,17 +24,6 @@ MainWindow::MainWindow(QWidget *parent)
     ui->tabWidget->removeTab(currentIndex);
     ui->tabWidget->insertTab(currentIndex, startWidgets[0], "Mixer 1");
     ui->tabWidget->setCurrentIndex(currentIndex);
-//     vLayoutRPM = ui->vLayoutRPM;
-//     QLineSeries* series = new QLineSeries();
-//     *series << QPointF(11, 1) << QPointF(13, 3) << QPointF(17, 6) << QPointF(18, 3) << QPointF(20, 2);
-//     QChart *chart = new QChart();
-//     chart->legend()->hide();
-//     chart->addSeries(series);
-//     chart->createDefaultAxes();
-//     chart->setTitle("Simple line chart example");
-//     QChartView *chartView = new QChartView(chart);
-//     chartView->setRenderHint(QPainter::Antialiasing);
-//     vLayoutRPM->addWidget(chartView);
 }
 
 MainWindow::~MainWindow()
@@ -45,6 +34,11 @@ MainWindow::~MainWindow()
 QList<QString> MainWindow::getAvailablePorts()
 {
     return availablePorts;
+}
+
+Serial *MainWindow::getSerialPort()
+{
+    return serials[currentTab];
 }
 
 void MainWindow::TabChange(int i)
@@ -62,9 +56,7 @@ void MainWindow::TabChange(int i)
     } else{
         currentTab = i;
         if(QString(typeid(tabWidget->currentWidget()).name()).compare("StartWidget")){
-            if(startWidgets[currentTab] && startWidgets[currentTab]->getComPorts()->count() == 1){
-                startWidgets[currentTab]->Reset();
-            }
+            startWidgets[currentTab]->Reset();
         }
     }
 }
@@ -76,19 +68,31 @@ void MainWindow::InitMixer(QString comPort)
             availablePorts.removeAt(i);
         }
     }
+    serials[0] = new Serial(comPort, 115200);
     initWidgets[currentTab] = new InitWidget(comPort);
-    connect(initWidgets[currentTab], SIGNAL(Start()), this, SLOT(Start()));
+    connect(initWidgets[currentTab], SIGNAL(Start(QString)), this, SLOT(Start(QString)));
     connect(initWidgets[currentTab], SIGNAL(Disconnect(QString)), this, SLOT(Disconnect(QString)));
     switchWidgets(initWidgets[currentTab], comPort);
 }
 
-void MainWindow::Start()
+void MainWindow::Start(QString comPort)
 {
-
+    activeWidgets[currentTab] = new ActiveWidget(comPort);
+    connect(initWidgets[currentTab], SIGNAL(Start(QString)), this, SLOT(Start(QString)));
+    connect(initWidgets[currentTab], SIGNAL(Disconnect(QString)), this, SLOT(Disconnect(QString)));
+    switchWidgets(activeWidgets[currentTab], comPort);
 }
 
 void MainWindow::Disconnect(QString portName)
 {
+    for(int i=0; i<MAX_TABS;i++){
+        if(serials[i]){
+            if(serials[i]->getSerialPort().portName() == portName){
+               serials[i]->disconnect();
+               break;
+            }
+        }
+    }
     availablePorts.append(portName);
     startWidgets[currentTab]->Reset();
     switchWidgets(startWidgets[currentTab]);

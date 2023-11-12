@@ -10,6 +10,9 @@ class Serial : public QObject
     Q_OBJECT
 public:
     explicit Serial(QString portName, int baudrate, QObject *parent = nullptr);
+    ~Serial();
+    const QSerialPort &getSerialPort() const;
+    void disconnect();
 
 signals:
     void MessageFinished();
@@ -24,7 +27,6 @@ private:
     QSerialPort serialPort;
     QSerialPortInfo info;
     QString buffer;
-
 };
 
 #endif // SERIAL_H

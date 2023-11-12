@@ -4,12 +4,9 @@
 #include <QMainWindow>
 #include <QSerialPort>
 #include <QSerialPortInfo>
-#include <QtCharts>
-using namespace QtCharts;
-#include <QLineSeries>
-#include <QChartView>
 #include "startwidget.h"
 #include "initwidget.h"
+#include "activewidget.h"
 #include "serial.h"
 
 QT_BEGIN_NAMESPACE
@@ -24,13 +21,14 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
     QList<QString> getAvailablePorts();
+    Serial *getSerialPort();
     static MainWindow* findMainWindow();
 
 
 private slots:
     void TabChange(int);
     void InitMixer(QString);
-    void Start();
+    void Start(QString);
     void Disconnect(QString);
 
 private:
@@ -41,8 +39,11 @@ private:
     QTabWidget *tabWidget;
     QList<QString> availablePorts;
 
+    Serial *serials[MAX_TABS];
     StartWidget *startWidgets[MAX_TABS];
     InitWidget *initWidgets[MAX_TABS];
+    ActiveWidget *activeWidgets[MAX_TABS];
+
     QSerialPortInfo info;
     void switchWidgets(QWidget *w, QString name ="");
 
