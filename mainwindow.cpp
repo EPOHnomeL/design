@@ -12,8 +12,10 @@ MainWindow::MainWindow(QWidget *parent)
     tabWidget = ui->tabWidget;
     connect(tabWidget, SIGNAL(currentChanged(int)), this, (SLOT(TabChange(int))));
 
-    availablePorts = info.availablePorts();
-
+    QList<QSerialPortInfo> allPorts = info.availablePorts();
+    for(int i=0; i<allPorts.size();i++){
+        availablePorts.append(allPorts[i].portName());
+    }
     startWidgets[0] = new StartWidget();
     connect(startWidgets[0], SIGNAL(ComPortSelected(QString)), this, SLOT(InitMixer(QString)));
 
@@ -50,7 +52,7 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-QList<QSerialPortInfo> MainWindow::getAvailablePorts()
+QList<QString> MainWindow::getAvailablePorts()
 {
     return availablePorts;
 }
@@ -106,6 +108,11 @@ void MainWindow::TabChange(int i)
             tabWidget->setCurrentIndex(currentTab);
         }
     } else{
+        if(QString(typeid(tabWidget->currentWidget()).name()).compare("StartWidget")){
+            if(startWidgets[currentTab] && startWidgets[currentTab]->getComPorts()->currentIndex() ==0){
+                startWidgets[currentTab]->Reset();
+            }
+        }
         currentTab = i;
     }
 }
@@ -113,18 +120,26 @@ void MainWindow::TabChange(int i)
 void MainWindow::InitMixer(QString comPort)
 {
     for(int i=0;i<availablePorts.size();i++){
-        if(availablePorts[i].portName() == comPort){
+        if(availablePorts[i] == comPort){
             availablePorts.removeAt(i);
         }
     }
     initWidgets[currentTab] = new InitWidget(comPort);
     connect(initWidgets[currentTab], SIGNAL(Start()), this, SLOT(Start()));
+    connect(initWidgets[currentTab], SIGNAL(Disconnect(QString)), this, SLOT(Disconnect(QString)));
     switchWidgets(initWidgets[currentTab]);
 }
 
 void MainWindow::Start()
 {
 
+}
+
+void MainWindow::Disconnect(QString portName)
+{
+    availablePorts.append(portName);
+    startWidgets[currentTab]->Reset();
+    switchWidgets(startWidgets[currentTab]);
 }
 
 void MainWindow::switchWidgets(QWidget *w)

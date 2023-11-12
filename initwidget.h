@@ -11,6 +11,12 @@ QT_BEGIN_NAMESPACE
 namespace Ui { class InitWidget; }
 QT_END_NAMESPACE
 
+struct Profile{
+    QString name, ratio;
+    int speed;
+    float time;
+};
+
 class InitWidget : public QWidget
 {
     Q_OBJECT
@@ -27,6 +33,7 @@ public slots:
 
 signals:
     void Start();
+    void Disconnect(QString);
 
 private:
     Ui::InitWidget *ui;
@@ -34,7 +41,9 @@ private:
     QLineEdit *profileNameEdit, *mixingSpeedEdit, *mixingTimeEdit, *mixingRatioEdit;
     QComboBox *profilesBox;
     QLabel *statusLabel;
-
+    QString comPort;
+    QList<Profile> profiles;
+    bool editing = false;
 
 };
 

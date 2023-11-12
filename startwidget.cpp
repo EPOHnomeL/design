@@ -8,17 +8,8 @@ StartWidget::StartWidget(QWidget *parent) : QWidget(parent), ui(new Ui::StartWid
 {
     ui->setupUi(this);
     comPorts = ui->comPorts;
-
     connect(comPorts, SIGNAL(currentIndexChanged(QString)), this, SLOT(CurrentChanged(QString)));
-
-    QList<QSerialPortInfo> ports =  MainWindow::findMainWindow()->getAvailablePorts();
-    if(ports.length() == 0){
-        comPorts->addItem("No mixer found");
-    } else{
-        comPorts->addItem("Select...");
-    }
-    foreach(auto &x,ports)
-        comPorts->addItem(x.portName());
+    Reset();
 }
 
 StartWidget::~StartWidget()
@@ -26,9 +17,32 @@ StartWidget::~StartWidget()
 
 }
 
+void StartWidget::Reset()
+{
+    QList<QString> ports =  MainWindow::findMainWindow()->getAvailablePorts();
+    if(ports.length() == 0){
+        comPorts->addItem("No mixer found");
+    } else{
+        if(comPorts->count() == 0){
+            comPorts->addItem("Select...");
+        }
+    }
+    for(int i=1; i<comPorts->count();i++){
+        comPorts->removeItem(i);
+    }
+    foreach(auto &x,ports)
+        comPorts->addItem(x);
+    comPorts->setCurrentIndex(0);
+}
+
 void StartWidget::CurrentChanged(QString s )
 {
     if(comPorts->currentIndex() != 0){
         emit ComPortSelected(s);
     }
+}
+
+QComboBox *StartWidget::getComPorts() const
+{
+    return comPorts;
 }

@@ -19,9 +19,13 @@ class StartWidget : public QWidget
 public:
     explicit StartWidget(QWidget *parent = nullptr);
     ~StartWidget();
+    void Reset();
+
+    QComboBox *getComPorts() const;
 
 public slots:
     void CurrentChanged(QString);
+
 
 signals:
     void ComPortSelected(QString);
