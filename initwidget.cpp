@@ -1,6 +1,6 @@
 #include "initwidget.h"
 #include <QDebug>
-#include <QRegularExpression>>
+#include <QRegularExpression>
 #include "mainwindow.h"
 
 

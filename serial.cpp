@@ -11,13 +11,13 @@ Serial::Serial(QString portName, int baudrate, QObject *parent) : QObject(parent
 void Serial::setupModbusDevice() {
     modbusDevice = new QModbusRtuSerialServer();
     modbusDevice->setConnectionParameter(QModbusDevice::SerialPortNameParameter, "COM3");
-    modbusDevice->setConnectionParameter(QModbusDevice::SerialBaudRateParameter, QSerialPort::Baud9600);
+    modbusDevice->setConnectionParameter(QModbusDevice::SerialBaudRateParameter, QSerialPort::Baud115200);
     modbusDevice->setConnectionParameter(QModbusDevice::SerialDataBitsParameter, QSerialPort::Data8);
     modbusDevice->setConnectionParameter(QModbusDevice::SerialParityParameter, QSerialPort::NoParity);
     modbusDevice->setConnectionParameter(QModbusDevice::SerialStopBitsParameter, QSerialPort::OneStop);
     modbusDevice->setServerAddress(1);
     QModbusDataUnitMap reg;
-    reg.insert(QModbusDataUnit::HoldingRegisters, { QModbusDataUnit::HoldingRegisters, 0, 6 });
+    reg.insert(QModbusDataUnit::HoldingRegisters, { QModbusDataUnit::HoldingRegisters, 0, 1 });
     modbusDevice->setMap(reg);
 
     modbusDevice->connectDevice();
@@ -26,12 +26,10 @@ void Serial::setupModbusDevice() {
 }
 
 void Serial::readRegister(QModbusDataUnit::RegisterType table, int address, int size) {
-    if (table == QModbusDataUnit::HoldingRegisters && address == 0 && size == 6) {
-        QModbusDataUnit req = QModbusDataUnit(QModbusDataUnit::HoldingRegisters, 0, 6);
+    if (table == QModbusDataUnit::HoldingRegisters && address == 0 && size == 1) {
+        QModbusDataUnit req = QModbusDataUnit(QModbusDataUnit::HoldingRegisters, 0, 1);
         if (modbusDevice->data(&req)) {
-            for (uint i = 0; i < req.valueCount(); i++) {
-                qDebug() << "Value at register" << i << "is" << req.value(i);
-            }
+            emit valueRecieved(req.value(0));
         } else {
             qDebug() << "Read error: " << modbusDevice->errorString();
         }

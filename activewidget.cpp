@@ -35,7 +35,7 @@ ActiveWidget::ActiveWidget(QString acomPort, QWidget *parent) : QWidget(parent),
 
 
     serial = MainWindow::findMainWindow()->getSerialPort();
-    connect(serial, SIGNAL(MessageFinished(QString)), this, SLOT(recieveMessage(QString)));
+    connect(serial, SIGNAL(valueRecieved(uint16_t)), this, SLOT(recieveValue(uint16_t)));
 
     // Set up timer to update the chart every 1000 milliseconds (1 second)
     updateTimer = new QTimer(this);
@@ -48,9 +48,9 @@ ActiveWidget::~ActiveWidget()
 
 }
 
-void ActiveWidget::recieveMessage(QString s)
+void ActiveWidget::recieveValue(uint16_t v)
 {
-    value = s.toInt()*200/1024;
+    value = v*200/1024;
 }
 
 void ActiveWidget::updateChart()

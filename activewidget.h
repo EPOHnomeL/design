@@ -23,7 +23,7 @@ public:
     ~ActiveWidget();
 
 private slots:
-    void recieveMessage(QString);
+    void recieveValue(uint16_t);
     void updateChart();
 
 

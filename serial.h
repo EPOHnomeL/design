@@ -20,6 +20,7 @@ public:
 
 signals:
     void MessageFinished(QString);
+    void valueRecieved(uint16_t);
 
 private slots:
     void MessageStream();
