@@ -8,7 +8,7 @@ StartWidget::StartWidget(QWidget *parent) : QWidget(parent), ui(new Ui::StartWid
 {
     ui->setupUi(this);
     comPorts = ui->comPorts;
-    connect(comPorts, SIGNAL(currentIndexChanged(QString)), this, SLOT(CurrentChanged(QString)));
+    connect(comPorts, SIGNAL(currentTextChanged(QString)), this, SLOT(CurrentChanged(QString)));
     Reset();
 }
 

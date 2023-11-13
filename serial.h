@@ -6,6 +6,8 @@
 #include <QSerialPortInfo>
 #include <QSerialPortInfo>
 #include <QDebug>
+#include <QModbusDataUnit>
+#include <QModbusRtuSerialServer>
 
 class Serial : public QObject
 {
@@ -24,17 +26,20 @@ private slots:
     void SetupSerial(QString portName, int baudrate);
     void MessageReceived(QString);
     void finished();
+    void readRegister(QModbusDataUnit::RegisterType table, int address, int size);
 
 private:
     const QString END_MESSAGE = "!";
     QSerialPort serialPort;
     QSerialPortInfo info;
     QString buffer;
-
+    void setupModbusDevice();
+    void readRegister();
 //    QModbusReply *reply;
 //    QModbusRtuSerialMaster modbusMaster;
 //    QModbusRtuSerialSlave modbusSlave;
     void SetupModbus(QString);
+    QModbusRtuSerialServer *modbusDevice;
 };
 
 #endif // SERIAL_H

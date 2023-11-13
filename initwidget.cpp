@@ -25,7 +25,7 @@ InitWidget::InitWidget(QString acomPort, QWidget *parent) : QWidget(parent), ui(
 
     profilesBox->addItem("Select...");
     profilesBox->addItem("Create Profile");
-    connect(profilesBox, SIGNAL(currentIndexChanged(QString)), this, SLOT(ProfileSelect(QString)));
+    connect(profilesBox, SIGNAL(currentTextChanged(QString)), this, SLOT(ProfileSelect(QString)));
 
     connect(startButton, SIGNAL(clicked()), this, SLOT(StartClicked()));
     connect(disconnectButton, SIGNAL(clicked()), this, SLOT(DisconnectClicked()));
