@@ -5,6 +5,7 @@
 Serial::Serial(QString portName, int baudrate, QObject *parent) : QObject(parent)
 {
     connect(this,SIGNAL(MessageFinished(QString)),this,SLOT(MessageReceived(QString)));
+}
 //    QModbusRtuSerialClient  *client = new QModbusClient();
 //    client->setConnectionParameter(QModbusDevice::SerialPortNameParameter, portName);
 //    client->setConnectionParameter(QModbusDevice::SerialParityParameter, QSerialPort::NoParity);
@@ -111,7 +112,7 @@ void Serial::MessageReceived(QString)
 
 void Serial::finished()
 {
-    qDebug() << "Analog Value:" << reply->result().values();
+//    qDebug() << "Analog Value:" << reply->result().values();
 }
 
 const QSerialPort &Serial::getSerialPort() const

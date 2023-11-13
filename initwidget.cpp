@@ -1,5 +1,6 @@
 #include "initwidget.h"
 #include <QDebug>
+#include <QRegularExpression>>
 #include "mainwindow.h"
 
 
@@ -64,8 +65,8 @@ void InitWidget::EditClicked()
             qDebug() << "Time is not a float";
 
         QString ratioValue = mixingRatioEdit->text();
-        QRegExp re("^\\d+:\\d+$");
-        if (!re.exactMatch(ratioValue))
+        QRegularExpression re("^\\d+:\\d+$");
+        if (!re.match(ratioValue).hasMatch())
            qDebug() << "Ratio is not of correct format";
 
         Profile p = {.name = profileNameEdit->text(), .ratio = ratioValue, .speed = speedValue, .time = timeValue};
@@ -116,8 +117,8 @@ void InitWidget::CreateClicked()
             qDebug() << "Time is not a float";
 
         QString ratioValue = mixingRatioEdit->text();
-        QRegExp re("^\\d+:\\d+$");
-        if (!re.exactMatch(ratioValue))
+        QRegularExpression re("^\\d+:\\d+$");
+        if (!re.match(ratioValue).hasMatch())
            qDebug() << "Ratio is not of correct format";
 
         Profile p = {.name = profileNameEdit->text(), .ratio = mixingRatioEdit->text(), .speed = speedValue, .time = timeValue};

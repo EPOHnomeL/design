@@ -6,7 +6,6 @@
 #include <QLCDNumber>
 #include <QPushButton>
 #include <QtCharts>
-using namespace QtCharts;
 #include <QLineSeries>
 #include <QChartView>
 #include "serial.h"
