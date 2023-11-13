@@ -1,4 +1,4 @@
-QT       += core gui serialport charts
+QT       += core gui serialport charts serialbus
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -15,6 +15,7 @@ SOURCES += \
     mainwindow.cpp \
     serial.cpp \
     startwidget.cpp
+    style.astylerc
 
 HEADERS += \
     activewidget.h \

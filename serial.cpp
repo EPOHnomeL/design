@@ -4,7 +4,35 @@
 Serial::Serial(QString portName, int baudrate, QObject *parent) : QObject(parent)
 {
     connect(this,SIGNAL(MessageFinished(QString)),this,SLOT(MessageReceived(QString)));
-    SetupSerial(portName, baudrate);
+//    SetupSerial(portName, 9600);
+    SetupModbus(portName);
+}
+
+void Serial::SetupModbus(QString portName)
+{
+
+    modbusMaster.setConnectionParameter(QModbusDevice::SerialPortNameParameter, portName);
+    modbusMaster.setConnectionParameter(QModbusDevice::SerialParityParameter, QSerialPort::NoParity);
+    modbusMaster.setConnectionParameter(QModbusDevice::SerialBaudRateParameter, QSerialPort::Baud9600);
+    modbusMaster.setConnectionParameter(QModbusDevice::SerialDataBitsParameter, QSerialPort::Data8);
+    modbusMaster.setConnectionParameter(QModbusDevice::SerialStopBitsParameter, QSerialPort::OneStop);
+    if (!modbusMaster.connectDevice()) {
+        qDebug() << "Connection failed:" << modbusMaster.errorString();
+        exit(EXIT_FAILURE);
+    }
+
+    QModbusDataUnit readUnit(QModbusDataUnit::Coils, 0, 1);
+    reply = modbusMaster.sendReadRequest(readUnit, 1);
+
+//    QModbusRequest req(QModbusPdu::ReadHoldingRegisters);
+//    reply = modbusMaster.sendRawRequest(req, 1);
+
+    if (!reply) {
+        qDebug() << "Read request error:" << modbusMaster.errorString();
+        exit(EXIT_FAILURE);
+    }
+
+    QObject::connect(reply, SIGNAL(finished()), this, SLOT(finished()));
 }
 
 Serial::~Serial()
@@ -47,8 +75,12 @@ void Serial::SetupSerial(QString portName, int baudrate){
 
 void Serial::MessageReceived(QString)
 {
-//    qDebug() << buffer;
-//    buffer = "";
+    qDebug() << buffer;
+}
+
+void Serial::finished()
+{
+    qDebug() << "Analog Value:" << reply->result().values();
 }
 
 const QSerialPort &Serial::getSerialPort() const
@@ -58,5 +90,5 @@ const QSerialPort &Serial::getSerialPort() const
 
 void Serial::disconnect()
 {
-    serialPort.close();
+//        serialPort.close();
 }

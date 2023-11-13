@@ -4,6 +4,10 @@
 #include <QObject>
 #include <QSerialPort>
 #include <QSerialPortInfo>
+#include <QModbusDataUnit>
+#include <QModbusRtuSerialMaster>
+#include <QSerialPortInfo>
+#include <QDebug>
 
 class Serial : public QObject
 {
@@ -21,12 +25,16 @@ private slots:
     void MessageStream();
     void SetupSerial(QString portName, int baudrate);
     void MessageReceived(QString);
+    void finished();
 
 private:
     const QString END_MESSAGE = "!";
     QSerialPort serialPort;
     QSerialPortInfo info;
     QString buffer;
+
+    QModbusReply *reply;
+    QModbusRtuSerialMaster modbusMaster;
 };
 
 #endif // SERIAL_H
