@@ -5,7 +5,9 @@
 #include <QSerialPort>
 #include <QSerialPortInfo>
 #include <QModbusDataUnit>
+#include <QModbusServer>
 #include <QModbusRtuSerialMaster>
+#include <QModbusRtuSerialSlave>
 #include <QSerialPortInfo>
 #include <QDebug>
 
@@ -34,7 +36,9 @@ private:
     QString buffer;
 
     QModbusReply *reply;
-    QModbusRtuSerialMaster modbusMaster;
+//    QModbusRtuSerialMaster modbusMaster;
+    QModbusRtuSerialSlave modbusSlave;
+    void SetupModbus(QString);
 };
 
 #endif // SERIAL_H

@@ -15,7 +15,7 @@ SOURCES += \
     mainwindow.cpp \
     serial.cpp \
     startwidget.cpp
-    style.astylerc
+    style.astylerc \
 
 HEADERS += \
     activewidget.h \
