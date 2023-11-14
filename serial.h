@@ -20,7 +20,10 @@ public:
 
 signals:
     void statusChanged(uint16_t);
-    void profilesChanged(uint16_t);
+    void rpmChanged(uint16_t);
+    void timeChanged(uint16_t);
+    void profilesChanged(QList<quint16>);
+    void currentProfileChanged(uint16_t);
     void currentSpeedChanged(uint16_t);
 
 private slots:
@@ -31,7 +34,6 @@ private:
     void setupModbusDevice(QString);
     void readRegister();
     void SetupModbus(QString);
-    QModbusDataUnit status, profiles, currentSpeed;
     QModbusRtuSerialServer *modbusDevice;
 };
 

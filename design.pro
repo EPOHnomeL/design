@@ -22,7 +22,8 @@ HEADERS += \
     initwidget.h \
     mainwindow.h \
     serial.h \
-    startwidget.h
+    startwidget.h \
+    types.h
 
 FORMS += \
     activewidget.ui \

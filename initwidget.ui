@@ -61,6 +61,19 @@
        <property name="rightMargin">
         <number>50</number>
        </property>
+       <item row="0" column="1">
+        <spacer name="horizontalSpacer">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
        <item row="5" column="0">
         <widget class="QPushButton" name="disconnectButton">
          <property name="minimumSize">
@@ -80,33 +93,18 @@
          </property>
         </widget>
        </item>
-       <item row="1" column="0">
-        <widget class="QComboBox" name="profilesBox">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
+       <item row="3" column="1">
+        <spacer name="verticalSpacer_4">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
          </property>
-         <property name="minimumSize">
+         <property name="sizeHint" stdset="0">
           <size>
-           <width>200</width>
-           <height>0</height>
+           <width>20</width>
+           <height>40</height>
           </size>
          </property>
-         <property name="maximumSize">
-          <size>
-           <width>16777215</width>
-           <height>16777215</height>
-          </size>
-         </property>
-         <property name="font">
-          <font>
-           <family>MS Shell Dlg 2</family>
-           <pointsize>11</pointsize>
-          </font>
-         </property>
-        </widget>
+        </spacer>
        </item>
        <item row="0" column="0">
         <widget class="QLabel" name="label_2">
@@ -120,6 +118,19 @@
           <string>View Current Mixing Profiles</string>
          </property>
         </widget>
+       </item>
+       <item row="2" column="1">
+        <spacer name="verticalSpacer_2">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
        </item>
        <item row="2" column="0">
         <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -195,31 +206,33 @@
          </item>
         </layout>
        </item>
-       <item row="0" column="1">
-        <spacer name="horizontalSpacer">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
+       <item row="1" column="0">
+        <widget class="QComboBox" name="profilesBox">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
          </property>
-         <property name="sizeHint" stdset="0">
+         <property name="minimumSize">
           <size>
-           <width>40</width>
-           <height>20</height>
+           <width>200</width>
+           <height>0</height>
           </size>
          </property>
-        </spacer>
-       </item>
-       <item row="3" column="1">
-        <spacer name="verticalSpacer_4">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
+         <property name="maximumSize">
           <size>
-           <width>20</width>
-           <height>40</height>
+           <width>16777215</width>
+           <height>16777215</height>
           </size>
          </property>
-        </spacer>
+         <property name="font">
+          <font>
+           <family>MS Shell Dlg 2</family>
+           <pointsize>11</pointsize>
+          </font>
+         </property>
+        </widget>
        </item>
        <item row="4" column="1">
         <spacer name="verticalSpacer_5">
@@ -230,19 +243,6 @@
           <size>
            <width>20</width>
            <height>60</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item row="2" column="1">
-        <spacer name="verticalSpacer_2">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>40</height>
           </size>
          </property>
         </spacer>
@@ -280,7 +280,7 @@
         <string notr="true">background-color: #DDDDDD; color: #5c995c</string>
        </property>
        <property name="text">
-        <string>Status: COM1 Connected; Waiting for Operator</string>
+        <string>Status: COM1 Connected; Waiting for Operator to select profile</string>
        </property>
       </widget>
      </item>

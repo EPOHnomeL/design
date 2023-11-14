@@ -7,19 +7,11 @@
 #include <QPushButton>
 #include "ui_initwidget.h"
 #include "serial.h"
+#include "types.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class InitWidget; }
 QT_END_NAMESPACE
-
-// enums
-
-
-struct Profile{
-    QString name, ratio;
-    int speed;
-    float time;
-};
 
 class InitWidget : public QWidget
 {
@@ -31,6 +23,7 @@ public:
 public slots:
     void DisconnectClicked();
     void ProfileSelect(QString);
+    void refreshProfiles(QList<quint16>);
 
 signals:
     void Start(QString);
@@ -47,7 +40,6 @@ private:
     bool editing = false;
     QString prevProfileName ="";
     Serial *serial;
-
 };
 
 #endif // INITWIDGET_H

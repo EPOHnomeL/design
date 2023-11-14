@@ -23,7 +23,6 @@ MainWindow::MainWindow(QWidget *parent)
     startWidgets[0] = new StartWidget();
     connect(startWidgets[0], SIGNAL(ComPortSelected(QString)), this, SLOT(InitMixer(QString)));
 
-
     int currentIndex = ui->tabWidget->currentIndex();
     ui->tabWidget->removeTab(currentIndex);
     ui->tabWidget->insertTab(currentIndex, startWidgets[0], "Mixer 1");
@@ -67,6 +66,8 @@ void MainWindow::chosenPort(QString s){
 }
 
 
+
+
 void MainWindow::Disconnect(QString portName)
 {
     for(int i=0; i<MAX_TABS;i++){
@@ -85,15 +86,13 @@ void MainWindow::Disconnect(QString portName)
 void MainWindow::statusChanged(uint16_t state)
 {
     switch(state){
-    case 0:
-        Disconnect(ports[currentTab]);
-        break;
-    case 1:
+    case 3:
+        // connect current profile //
         if(!qobject_cast<InitWidget*>(tabWidget->currentWidget())) {
             switchWidgets(initWidgets[currentTab], ports[currentTab]);
         }
         break;
-    case 2:
+    case 4:
         if(!qobject_cast<ActiveWidget*>(tabWidget->currentWidget())) {
             if(first){
                first = !first;
@@ -117,7 +116,7 @@ void MainWindow::InitMixer(QString port)
     }
     initWidgets[currentTab] = new InitWidget(port);
     serials[currentTab] = new Serial(port);
-    // connect profile changes //
+    connect(serials[currentTab], SIGNAL(profilesChanged(QList<quint16>)), initWidgets[currentTab], SLOT(refreshProfiles(QList<quint16>)));
     connect(serials[currentTab], SIGNAL(statusChanged(uint16_t)), this, SLOT(statusChanged(uint16_t)));
     connect(initWidgets[currentTab], SIGNAL(Disconnect(QString)), this, SLOT(Disconnect(QString)));
     switchWidgets(initWidgets[currentTab], port);
