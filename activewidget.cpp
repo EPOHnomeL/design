@@ -6,8 +6,6 @@ ActiveWidget::ActiveWidget(QString acomPort, QWidget *parent) : QWidget(parent),
 {
     ui->setupUi(this);
     comPort = acomPort;
-
-    stopButton = ui->stopButton;
     speedLCD = ui->speedLCD;
     timeLCD = ui->timeLCD;
     chartLayout = ui->chartLayout;
@@ -25,6 +23,10 @@ ActiveWidget::ActiveWidget(QString acomPort, QWidget *parent) : QWidget(parent),
     chart->addAxis(axisX, Qt::AlignBottom);
     series->attachAxis(axisX);
 
+    for(int i=0;i<1000;i++){
+        series->append(QDateTime::currentDateTime().toMSecsSinceEpoch()-10000+10*i, 0);
+    }
+
     axisY = new QValueAxis;
     chart->addAxis(axisY, Qt::AlignLeft);
     series->attachAxis(axisY);
@@ -35,7 +37,7 @@ ActiveWidget::ActiveWidget(QString acomPort, QWidget *parent) : QWidget(parent),
 
 
     serial = MainWindow::findMainWindow()->getSerialPort();
-    connect(serial, SIGNAL(valueRecieved(uint16_t)), this, SLOT(recieveValue(uint16_t)));
+    connect(serial, SIGNAL(currentSpeedChanged(uint16_t)), this, SLOT(recieveValue(uint16_t)));
 
     // Set up timer to update the chart every 1000 milliseconds (1 second)
     updateTimer = new QTimer(this);
@@ -55,7 +57,6 @@ void ActiveWidget::recieveValue(uint16_t v)
 
 void ActiveWidget::updateChart()
 {
-
     QDateTime currentTime = QDateTime::currentDateTime();
     series->append(currentTime.toMSecsSinceEpoch(), value);
     speedLCD->display(value);

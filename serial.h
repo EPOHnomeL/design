@@ -13,33 +13,25 @@ class Serial : public QObject
 {
     Q_OBJECT
 public:
-    explicit Serial(QString portName, int baudrate, QObject *parent = nullptr);
+    explicit Serial(QString portName, QObject *parent = nullptr);
     ~Serial();
-    const QSerialPort &getSerialPort() const;
     void disconnect();
+    QString getPortName() const;
 
 signals:
-    void MessageFinished(QString);
-    void valueRecieved(uint16_t);
+    void statusChanged(uint16_t);
+    void profilesChanged(uint16_t);
+    void currentSpeedChanged(uint16_t);
 
 private slots:
-    void MessageStream();
-    void SetupSerial(QString portName, int baudrate);
-    void MessageReceived(QString);
-    void finished();
     void readRegister(QModbusDataUnit::RegisterType table, int address, int size);
 
 private:
-    const QString END_MESSAGE = "!";
-    QSerialPort serialPort;
-    QSerialPortInfo info;
-    QString buffer;
-    void setupModbusDevice();
+    QString portName;
+    void setupModbusDevice(QString);
     void readRegister();
-//    QModbusReply *reply;
-//    QModbusRtuSerialMaster modbusMaster;
-//    QModbusRtuSerialSlave modbusSlave;
     void SetupModbus(QString);
+    QModbusDataUnit status, profiles, currentSpeed;
     QModbusRtuSerialServer *modbusDevice;
 };
 

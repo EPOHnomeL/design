@@ -12,6 +12,9 @@ QT_BEGIN_NAMESPACE
 namespace Ui { class InitWidget; }
 QT_END_NAMESPACE
 
+// enums
+
+
 struct Profile{
     QString name, ratio;
     int speed;
@@ -26,9 +29,6 @@ public:
     ~InitWidget();
 
 public slots:
-    void StartClicked();
-    void EditClicked();
-    void CreateClicked();
     void DisconnectClicked();
     void ProfileSelect(QString);
 
@@ -38,7 +38,7 @@ signals:
 
 private:
     Ui::InitWidget *ui;
-    QPushButton *startButton, *editProfileButton, *createProfileButton, *disconnectButton;
+    QPushButton *disconnectButton;
     QLineEdit *profileNameEdit, *mixingSpeedEdit, *mixingTimeEdit, *mixingRatioEdit;
     QComboBox *profilesBox;
     QLabel *statusLabel;

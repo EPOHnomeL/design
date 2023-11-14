@@ -27,9 +27,10 @@ public:
 
 private slots:
     void TabChange(int);
-    void InitMixer(QString);
-    void Start(QString);
     void Disconnect(QString);
+    void statusChanged(uint16_t);
+    void InitMixer(QString);
+    void chosenPort(QString);
 
 private:
     const static int MAX_TABS = 5;
@@ -38,7 +39,8 @@ private:
     int currentTab = 0;
     QTabWidget *tabWidget;
     QList<QString> availablePorts;
-
+    QString ports[5];
+    bool first = true;
     Serial *serials[MAX_TABS];
     StartWidget *startWidgets[MAX_TABS];
     InitWidget *initWidgets[MAX_TABS];

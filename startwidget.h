@@ -26,7 +26,6 @@ public:
 public slots:
     void CurrentChanged(QString);
 
-
 signals:
     void ComPortSelected(QString);
 

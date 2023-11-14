@@ -30,7 +30,6 @@ private slots:
 private:
     Ui::ActiveWidget *ui;
     QString comPort;
-    QPushButton *stopButton;
     QLCDNumber *speedLCD, *timeLCD;
 
     QChart *chart;

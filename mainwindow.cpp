@@ -16,6 +16,10 @@ MainWindow::MainWindow(QWidget *parent)
         availablePorts.append(allPorts[i].portName());
     }
 
+    for(int j=0;j<5;j++){
+        ports[j] = "";
+    }
+
     startWidgets[0] = new StartWidget();
     connect(startWidgets[0], SIGNAL(ComPortSelected(QString)), this, SLOT(InitMixer(QString)));
 
@@ -58,32 +62,16 @@ void MainWindow::TabChange(int i)
     }
 }
 
-void MainWindow::InitMixer(QString comPort)
-{
-    for(int i=0;i<availablePorts.size();i++){
-        if(availablePorts[i] == comPort){
-            availablePorts.removeAt(i);
-        }
-    }
-    serials[0] = new Serial(comPort, 115200);
-    initWidgets[currentTab] = new InitWidget(comPort);
-    connect(initWidgets[currentTab], SIGNAL(Start(QString)), this, SLOT(Start(QString)));
-    connect(initWidgets[currentTab], SIGNAL(Disconnect(QString)), this, SLOT(Disconnect(QString)));
-    switchWidgets(initWidgets[currentTab], comPort);
+void MainWindow::chosenPort(QString s){
+    ports[currentTab] = s;
 }
 
-void MainWindow::Start(QString comPort)
-{
-    activeWidgets[currentTab] = new ActiveWidget(comPort);
-//    connect(getSerialPort(), SIGNAL(MessageFinished(QString)), activeWidgets[currentTab], SLOT(recieveMessage(QString)));
-    switchWidgets(activeWidgets[currentTab], comPort);
-}
 
 void MainWindow::Disconnect(QString portName)
 {
     for(int i=0; i<MAX_TABS;i++){
         if(serials[i]){
-            if(serials[i]->getSerialPort().portName() == portName){
+            if(serials[i]->getPortName() == portName){
                serials[i]->disconnect();
                break;
             }
@@ -92,6 +80,47 @@ void MainWindow::Disconnect(QString portName)
     availablePorts.append(portName);
     startWidgets[currentTab]->Reset();
     switchWidgets(startWidgets[currentTab]);
+}
+
+void MainWindow::statusChanged(uint16_t state)
+{
+    switch(state){
+    case 0:
+        Disconnect(ports[currentTab]);
+        break;
+    case 1:
+        if(!qobject_cast<InitWidget*>(tabWidget->currentWidget())) {
+            switchWidgets(initWidgets[currentTab], ports[currentTab]);
+        }
+        break;
+    case 2:
+        if(!qobject_cast<ActiveWidget*>(tabWidget->currentWidget())) {
+            if(first){
+               first = !first;
+               activeWidgets[currentTab] = new ActiveWidget(ports[currentTab]);
+            }
+            switchWidgets(activeWidgets[currentTab], ports[currentTab]);
+        }
+        break;
+    default:
+        return;
+    }
+}
+
+void MainWindow::InitMixer(QString port)
+{
+    ports[currentTab] = port;
+    for(int i=0;i<availablePorts.size();i++){
+        if(availablePorts[i] == port){
+            availablePorts.removeAt(i);
+        }
+    }
+    initWidgets[currentTab] = new InitWidget(port);
+    serials[currentTab] = new Serial(port);
+    // connect profile changes //
+    connect(serials[currentTab], SIGNAL(statusChanged(uint16_t)), this, SLOT(statusChanged(uint16_t)));
+    connect(initWidgets[currentTab], SIGNAL(Disconnect(QString)), this, SLOT(Disconnect(QString)));
+    switchWidgets(initWidgets[currentTab], port);
 }
 
 void MainWindow::switchWidgets(QWidget *w, QString name)
