@@ -34,6 +34,7 @@ void Serial::readRegister(QModbusDataUnit::RegisterType table, int, int) {
     if (table != QModbusDataUnit::HoldingRegisters)
         return;
 
+
     QModbusDataUnit status = QModbusDataUnit(QModbusDataUnit::HoldingRegisters, 0x0000, 1);
     if (modbusDevice->data(&status)) {
         emit statusChanged(status.value(0));

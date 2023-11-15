@@ -37,7 +37,9 @@ void InitWidget::refreshProfiles(QList<quint16> profileData)
     for(int i=0;i<3;i++){
         Profile p = {.profileID = profileData.at(0+(i*4)), .time=profileData.at(1+(i*4)), .rpm=profileData.at(2+(i*4)), .percentWater=profileData.at(3+(i*4))};
         profiles.append(p);
-        profilesBox->addItem(QString("Profile %1").arg(p.profileID));
+        if(profilesBox->count() < 4){
+            profilesBox->addItem(QString("Profile %1").arg(p.profileID));
+        }
     }
 }
 
@@ -56,7 +58,6 @@ void InitWidget::ProfileSelect(QString s)
     if(s == "Select...")
         return;
     QString number = s[8];
-    qDebug() << number;
     Profile p = {};
     foreach(auto &profile, profiles){
         if(profile.profileID == number.toInt())
@@ -65,6 +66,6 @@ void InitWidget::ProfileSelect(QString s)
 
     profileNameEdit->setText(QString("%1").arg(p.profileID));
     mixingSpeedEdit->setText(QString("%1").arg(p.rpm));
-    mixingRatioEdit->setText(QString("%1 %").arg(p.rpm));
+    mixingRatioEdit->setText(QString("%1 %").arg(p.percentWater));
     mixingTimeEdit->setText(QString("%1").arg(p.time));
 }
