@@ -41,7 +41,7 @@ private:
     QTabWidget *tabWidget;
     QList<QString> availablePorts;
     QString ports[5];
-    bool first = true;
+    bool first[5] = {true, true, true, true, true};
     Serial *serials[MAX_TABS];
     StartWidget *startWidgets[MAX_TABS];
     InitWidget *initWidgets[MAX_TABS];

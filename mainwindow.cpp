@@ -47,15 +47,6 @@ Serial *MainWindow::getSerialPort()
 
 void MainWindow::TabChange(int i)
 {
-    if(qobject_cast<ActiveWidget*>(tabWidget->currentWidget())) {
-        QMessageBox msgBox;
-        msgBox.setIcon(QMessageBox::Warning);
-        msgBox.setWindowTitle("Warning");
-        msgBox.setText("You must first disconnect the mixer before changing tabs.");
-        msgBox.setStandardButtons(QMessageBox::Ok);
-        msgBox.exec();
-        return;
-    }
     if(i == tabCount){
         if(tabCount != MAX_TABS){
             startWidgets[tabCount] = new StartWidget();
@@ -122,15 +113,16 @@ void MainWindow::statusChanged(uint16_t state)
         break;
     case 4:
         if(!qobject_cast<ActiveWidget*>(tabWidget->currentWidget())) {
-            if(first){
-               first = !first;
+            if(first[currentTab]){
+               first[currentTab] = !first[currentTab];
                activeWidgets[currentTab] = new ActiveWidget(ports[currentTab]);
-               connect(serials[currentTab], SIGNAL(motorRPMChanged(uint16_t)), activeWidgets[currentTab], SLOT(updateMotor(uint16_t)));
-               connect(serials[currentTab], SIGNAL(bucketRPMChanged(uint16_t)), activeWidgets[currentTab], SLOT(updateBucket(uint16_t)));
-               connect(serials[currentTab], SIGNAL(armAngleChanged(uint16_t)), activeWidgets[currentTab], SLOT(updateArmAngle(uint16_t)));
-               connect(serials[currentTab], SIGNAL(timeChanged(uint16_t)), activeWidgets[currentTab], SLOT(updateTime(uint16_t)));
-               connect(activeWidgets[currentTab], SIGNAL(disconnectActive(QString)), this, SLOT(disconnectActive(QString)));
             }
+            connect(serials[currentTab], SIGNAL(motorRPMChanged(uint16_t)), activeWidgets[currentTab], SLOT(updateMotor(uint16_t)));
+            connect(serials[currentTab], SIGNAL(bucketRPMChanged(uint16_t)), activeWidgets[currentTab], SLOT(updateBucket(uint16_t)));
+            connect(serials[currentTab], SIGNAL(armAngleChanged(uint16_t)), activeWidgets[currentTab], SLOT(updateArmAngle(uint16_t)));
+            connect(serials[currentTab], SIGNAL(timeChanged(uint16_t)), activeWidgets[currentTab], SLOT(updateTime(uint16_t)));
+            connect(activeWidgets[currentTab], SIGNAL(disconnectActive(QString)), this, SLOT(disconnectActive(QString)));
+            activeWidgets[currentTab]->start();
             switchWidgets(activeWidgets[currentTab], ports[currentTab]);
         }
         break;

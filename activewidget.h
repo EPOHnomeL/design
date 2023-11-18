@@ -21,6 +21,7 @@ class ActiveWidget : public QWidget
 public:
     explicit ActiveWidget(QString, QWidget *parent = nullptr);
     ~ActiveWidget();
+    void start();
 
 signals:
     void disconnectActive(QString);
