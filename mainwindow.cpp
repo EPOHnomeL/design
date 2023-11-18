@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 #include <QDebug>
 #include <stdio.h>
+#include <QMessageBox>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -46,6 +47,15 @@ Serial *MainWindow::getSerialPort()
 
 void MainWindow::TabChange(int i)
 {
+    if(qobject_cast<ActiveWidget*>(tabWidget->currentWidget())) {
+        QMessageBox msgBox;
+        msgBox.setIcon(QMessageBox::Warning);
+        msgBox.setWindowTitle("Warning");
+        msgBox.setText("You must first disconnect the mixer before changing tabs.");
+        msgBox.setStandardButtons(QMessageBox::Ok);
+        msgBox.exec();
+        return;
+    }
     if(i == tabCount){
         if(tabCount != MAX_TABS){
             startWidgets[tabCount] = new StartWidget();
@@ -76,12 +86,33 @@ void MainWindow::Disconnect(QString portName)
         }
     }
     availablePorts.append(portName);
+
+    disconnect(serials[currentTab], SIGNAL(profilesChanged(QList<quint16>)), initWidgets[currentTab], SLOT(refreshProfiles(QList<quint16>)));
+    disconnect(serials[currentTab], SIGNAL(stateChanged(uint16_t)), this, SLOT(statusChanged(uint16_t)));
+    serials[currentTab]->disconnect();
+    startWidgets[currentTab]->Reset();
+    switchWidgets(startWidgets[currentTab]);
+}
+
+void MainWindow::disconnectActive(QString p)
+{
+    availablePorts.append(p);
+    serials[currentTab]->disconnect();
+    disconnect(serials[currentTab], SIGNAL(motorRPMChanged(uint16_t)), activeWidgets[currentTab], SLOT(updateMotor(uint16_t)));
+    disconnect(serials[currentTab], SIGNAL(bucketRPMChanged(uint16_t)), activeWidgets[currentTab], SLOT(updateBucket(uint16_t)));
+    disconnect(serials[currentTab], SIGNAL(armAngleChanged(uint16_t)), activeWidgets[currentTab], SLOT(updateArmAngle(uint16_t)));
+    disconnect(serials[currentTab], SIGNAL(timeChanged(uint16_t)), activeWidgets[currentTab], SLOT(updateTime(uint16_t)));
+    disconnect(serials[currentTab], SIGNAL(profilesChanged(QList<quint16>)), initWidgets[currentTab], SLOT(refreshProfiles(QList<quint16>)));
+    disconnect(serials[currentTab], SIGNAL(stateChanged(uint16_t)), this, SLOT(statusChanged(uint16_t)));
     startWidgets[currentTab]->Reset();
     switchWidgets(startWidgets[currentTab]);
 }
 
 void MainWindow::statusChanged(uint16_t state)
 {
+    if(!serials[currentTab]){
+        return;
+    }
     switch(state){
     case 3:
         // connect current profile //
@@ -94,6 +125,11 @@ void MainWindow::statusChanged(uint16_t state)
             if(first){
                first = !first;
                activeWidgets[currentTab] = new ActiveWidget(ports[currentTab]);
+               connect(serials[currentTab], SIGNAL(motorRPMChanged(uint16_t)), activeWidgets[currentTab], SLOT(updateMotor(uint16_t)));
+               connect(serials[currentTab], SIGNAL(bucketRPMChanged(uint16_t)), activeWidgets[currentTab], SLOT(updateBucket(uint16_t)));
+               connect(serials[currentTab], SIGNAL(armAngleChanged(uint16_t)), activeWidgets[currentTab], SLOT(updateArmAngle(uint16_t)));
+               connect(serials[currentTab], SIGNAL(timeChanged(uint16_t)), activeWidgets[currentTab], SLOT(updateTime(uint16_t)));
+               connect(activeWidgets[currentTab], SIGNAL(disconnectActive(QString)), this, SLOT(disconnectActive(QString)));
             }
             switchWidgets(activeWidgets[currentTab], ports[currentTab]);
         }

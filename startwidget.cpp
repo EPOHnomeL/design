@@ -40,9 +40,12 @@ void StartWidget::Reset()
             comPorts->setItemText(0, "Select...");
         }
     }
+    for(int i=1; i<comPorts->count();i++){
+        comPorts->removeItem(i);
+    }
     foreach(auto &x,ports){
         bool b = true;
-        for(int j=1;j<comPorts->count();j++){
+        for(int j=0;j<comPorts->count();j++){
             if(comPorts->itemText(j) == x)
                 b = false;
         }

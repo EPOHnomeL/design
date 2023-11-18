@@ -28,6 +28,7 @@ public:
 private slots:
     void TabChange(int);
     void Disconnect(QString);
+    void disconnectActive(QString p);
     void statusChanged(uint16_t);
     void InitMixer(QString);
     void chosenPort(QString);

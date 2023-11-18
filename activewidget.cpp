@@ -5,7 +5,7 @@
 ActiveWidget::ActiveWidget(QString acomPort, QWidget *parent) : QWidget(parent), ui(new Ui::ActiveWidget)
 {
     ui->setupUi(this);
-    connect(ui->b_disconnect, SIGNAL(clicked()), this, SLOT(disconnect()));
+    connect(ui->b_disconnect, SIGNAL(clicked()), this, SLOT(disconnectThis()));
     comPort = acomPort;
     lcd_time = ui->lcd_time;
     lcd_armAngle = ui->lcd_armAnge;
@@ -47,20 +47,21 @@ ActiveWidget::ActiveWidget(QString acomPort, QWidget *parent) : QWidget(parent),
 
 
     serial = MainWindow::findMainWindow()->getSerialPort();
-    connect(serial, SIGNAL(motorRPMChanged(uint16_t)), this, SLOT(updateMotor(uint16_t)));
-    connect(serial, SIGNAL(bucketRPMChanged(uint16_t)), this, SLOT(updateBucket(uint16_t)));
-    connect(serial, SIGNAL(armAngleChanged(uint16_t)), this, SLOT(updateArmAngle(uint16_t)));
-    connect(serial, SIGNAL(timeChanged(uint16_t)), this, SLOT(updateTime(uint16_t)));
+
 
     updateTimer = new QTimer(this);
     connect(updateTimer, SIGNAL(timeout()), this, SLOT(updateChart()));
-    updateTimer->start(10);
 }
 
 ActiveWidget::~ActiveWidget()
 {
 
 
+}
+
+void ActiveWidget::start()
+{
+    updateTimer->start(10);
 }
 
 void ActiveWidget::updateBucket(uint16_t v)
@@ -78,9 +79,10 @@ void ActiveWidget::updateTime(uint16_t v)
     lcd_time->display(m/10.0f);
 }
 
-void ActiveWidget::disconnect()
+void ActiveWidget::disconnectThis()
 {
-
+    updateTimer->stop();
+    emit disconnectActive(comPort);
 }
 
 void ActiveWidget::updateMotor(uint16_t v)

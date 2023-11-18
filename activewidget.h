@@ -22,12 +22,15 @@ public:
     explicit ActiveWidget(QString, QWidget *parent = nullptr);
     ~ActiveWidget();
 
+signals:
+    void disconnectActive(QString);
+
 private slots:
     void updateMotor(uint16_t);
     void updateBucket(uint16_t);
     void updateArmAngle(uint16_t);
     void updateTime(uint16_t);
-    void disconnect();
+    void disconnectThis();
     void updateChart();
 
 
