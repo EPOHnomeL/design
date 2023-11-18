@@ -21,11 +21,8 @@ void Serial::setupModbusDevice(QString portName) {
     modbusDevice->setServerAddress(1);
 
     QModbusDataUnitMap reg;
-    reg.insert(QModbusDataUnit::HoldingRegisters, { QModbusDataUnit::HoldingRegisters, 0x0000, 1 });
-    reg.insert(QModbusDataUnit::HoldingRegisters, { QModbusDataUnit::HoldingRegisters, 0x0001, 1 });
-    reg.insert(QModbusDataUnit::HoldingRegisters, { QModbusDataUnit::HoldingRegisters, 0x0002, 1 });
-    reg.insert(QModbusDataUnit::HoldingRegisters, { QModbusDataUnit::HoldingRegisters, 0x0003, 1 });
-    reg.insert(QModbusDataUnit::HoldingRegisters, { QModbusDataUnit::HoldingRegisters, 0x0004, 12 });
+    reg.insert(QModbusDataUnit::HoldingRegisters, { QModbusDataUnit::HoldingRegisters, 0x0000, 40 });
+    reg.insert(QModbusDataUnit::Coils, {QModbusDataUnit::Coils, 0x0030, 40});
     modbusDevice->setMap(reg);
     modbusDevice->connectDevice();
 }
@@ -35,43 +32,55 @@ void Serial::readRegister(QModbusDataUnit::RegisterType table, int, int) {
         return;
 
 
-    QModbusDataUnit status = QModbusDataUnit(QModbusDataUnit::HoldingRegisters, 0x0000, 1);
-    if (modbusDevice->data(&status)) {
-        emit statusChanged(status.value(0));
+    QModbusDataUnit state = QModbusDataUnit(QModbusDataUnit::HoldingRegisters, 0x0000, 1);
+    if (modbusDevice->data(&state)) {
+        emit stateChanged(state.value(0));
     }
 
-    QModbusDataUnit rpm = QModbusDataUnit(QModbusDataUnit::HoldingRegisters, 0x0001, 1);
-    if (modbusDevice->data(&rpm)) {
-        emit rpmChanged(rpm.value(0));
-    }
-
-    QModbusDataUnit time = QModbusDataUnit(QModbusDataUnit::HoldingRegisters, 0x0002, 1);
-    if (modbusDevice->data(&time)) {
-        emit timeChanged(time.value(0));
-    }
-
-    QModbusDataUnit currentProfile = QModbusDataUnit(QModbusDataUnit::HoldingRegisters, 0x0003, 1);
+    QModbusDataUnit currentProfile = QModbusDataUnit(QModbusDataUnit::HoldingRegisters, 0x0001, 1);
     if (modbusDevice->data(&currentProfile)) {
         emit currentProfileChanged(currentProfile.value(0));
     }
 
-    QModbusDataUnit profiles = QModbusDataUnit(QModbusDataUnit::HoldingRegisters, 0x0004, 12);
-    if (modbusDevice->data(&profiles)) {
-        emit profilesChanged(profiles.values());
+    QModbusDataUnit motorRPM = QModbusDataUnit(QModbusDataUnit::HoldingRegisters, 0x0002, 1);
+    if (modbusDevice->data(&motorRPM)) {
+        emit motorRPMChanged(motorRPM.value(0));
+    }
+
+    QModbusDataUnit bucketRPM = QModbusDataUnit(QModbusDataUnit::HoldingRegisters, 0x0003, 1);
+    if (modbusDevice->data(&bucketRPM)) {
+        emit bucketRPMChanged(bucketRPM.value(0));
+    }
+
+    QModbusDataUnit armAngle = QModbusDataUnit(QModbusDataUnit::HoldingRegisters, 0x0004, 1);
+    if (modbusDevice->data(&armAngle)) {
+        emit armAngleChanged(armAngle.value(0));
+    }
+
+    QModbusDataUnit time = QModbusDataUnit(QModbusDataUnit::HoldingRegisters, 0x0005, 1);
+    if (modbusDevice->data(&time)) {
+        emit timeChanged(time.value(0));
+    }
+
+    QModbusDataUnit profiles = QModbusDataUnit(QModbusDataUnit::HoldingRegisters, 0x00010, 40);
+    QModbusDataUnit profilesRotations = QModbusDataUnit(QModbusDataUnit::Coils, 0x00010, 40);
+    if (modbusDevice->data(&profiles) || modbusDevice->data(&profilesRotations)) {
+        QList<quint16> result;
+        QList<quint16> profileData = profiles.values();
+        QList<quint16> profilesRotationsData = profilesRotations.values();
+        for(int i=0;i<3;i++){
+            for(int j=0;j<10;j++){
+                if(j<=5)
+                    result.append(profileData.at(i*10+j));
+                if(j>=6&& j<=7){
+                    result.append(profilesRotationsData.at(i*10+(j-6)));
+                }
+            }
+        }
+
+        emit profilesChanged(result);
     }
 }
-
-//void Serial::readRegister(QModbusDataUnit::RegisterType, int, int) {
-//    QModbusDataUnit req = QModbusDataUnit(QModbusDataUnit::HoldingRegisters, 0, 3);
-//    if (modbusDevice->data(&req)) {
-//        qDebug() << req.values();
-//        emit statusChanged(req.value(1));
-//        emit profilesChanged(req.value(2));
-//        emit currentSpeedChanged(req.value(0));
-//    } else {
-//        qDebug() << "Read error: " << modbusDevice->errorString();
-//    }
-//}
 
 QString Serial::getPortName() const
 {

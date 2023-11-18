@@ -50,12 +50,12 @@
            </font>
           </property>
           <property name="text">
-           <string>Current Speed (rpm)</string>
+           <string>Time Left (s)</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QLCDNumber" name="speedLCD">
+         <widget class="QLCDNumber" name="lcd_time">
           <property name="minimumSize">
            <size>
             <width>0</width>
@@ -79,12 +79,12 @@
            </font>
           </property>
           <property name="text">
-           <string>Time Left (s)</string>
+           <string>Arm Angle (degrees)</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QLCDNumber" name="timeLCD">
+         <widget class="QLCDNumber" name="lcd_armAnge">
           <property name="minimumSize">
            <size>
             <width>0</width>
@@ -125,6 +125,32 @@
         <property name="bottomMargin">
          <number>6</number>
         </property>
+        <item>
+         <widget class="QPushButton" name="b_disconnect">
+          <property name="minimumSize">
+           <size>
+            <width>200</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>Disconnect Mixer</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="horizontalSpacer">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
        </layout>
       </item>
      </layout>

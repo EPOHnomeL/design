@@ -32,7 +32,7 @@ signals:
 private:
     Ui::InitWidget *ui;
     QPushButton *disconnectButton;
-    QLineEdit *profileNameEdit, *mixingSpeedEdit, *mixingTimeEdit, *mixingRatioEdit;
+    QLineEdit *e_profId, *e_motorRPM, *e_bucketRPM, *e_waterPercentage, *e_armAngle, *e_time, *e_motorDirection, *e_bucketDirection;
     QComboBox *profilesBox;
     QLabel *statusLabel;
     QString comPort;

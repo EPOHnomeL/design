@@ -119,19 +119,6 @@
          </property>
         </widget>
        </item>
-       <item row="2" column="1">
-        <spacer name="verticalSpacer_2">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>40</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
        <item row="2" column="0">
         <layout class="QVBoxLayout" name="verticalLayout_3">
          <property name="leftMargin">
@@ -154,7 +141,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="profileNameEdit"/>
+          <widget class="QLineEdit" name="e_profId"/>
          </item>
          <item>
           <widget class="QLabel" name="label_4">
@@ -165,12 +152,12 @@
             </font>
            </property>
            <property name="text">
-            <string>Mixing Speed (rpm)</string>
+            <string>Water Percentage</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="mixingSpeedEdit"/>
+          <widget class="QLineEdit" name="e_waterPercentage"/>
          </item>
          <item>
           <widget class="QLabel" name="label_5">
@@ -181,12 +168,12 @@
             </font>
            </property>
            <property name="text">
-            <string>Mixing Time (s)</string>
+            <string>Motor RPM</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="mixingTimeEdit"/>
+          <widget class="QLineEdit" name="e_motorRPM"/>
          </item>
          <item>
           <widget class="QLabel" name="label_6">
@@ -197,12 +184,12 @@
             </font>
            </property>
            <property name="text">
-            <string>Mixing Ratio (Cement:Water)</string>
+            <string>Bucket RPM</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="mixingRatioEdit"/>
+          <widget class="QLineEdit" name="e_bucketRPM"/>
          </item>
         </layout>
        </item>
@@ -246,6 +233,80 @@
           </size>
          </property>
         </spacer>
+       </item>
+       <item row="2" column="1">
+        <layout class="QVBoxLayout" name="verticalLayout_4">
+         <item>
+          <widget class="QLabel" name="label">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="font">
+            <font>
+             <pointsize>11</pointsize>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="text">
+            <string>Arm Angle</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="e_armAngle"/>
+         </item>
+         <item>
+          <widget class="QLabel" name="label_7">
+           <property name="font">
+            <font>
+             <pointsize>11</pointsize>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="text">
+            <string>Mixing Time</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="e_time"/>
+         </item>
+         <item>
+          <widget class="QLabel" name="label_8">
+           <property name="font">
+            <font>
+             <pointsize>11</pointsize>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="text">
+            <string>Motor Direction</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="e_motorDirection"/>
+         </item>
+         <item>
+          <widget class="QLabel" name="label_9">
+           <property name="font">
+            <font>
+             <pointsize>11</pointsize>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="text">
+            <string>Bucket Direction</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="e_bucketDirection"/>
+         </item>
+        </layout>
        </item>
       </layout>
      </item>

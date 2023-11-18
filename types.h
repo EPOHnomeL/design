@@ -12,7 +12,8 @@ enum States {
 };
 
 struct Profile{
-    uint16_t profileID, time, rpm, percentWater;
+    uint16_t profileID, waterPercentage, motorRPM, bucketRPM, armAngle, time;
+    bool motorRotation, bucketRotation;
 };
 
 #endif // TYPES_H

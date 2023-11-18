@@ -65,9 +65,6 @@ void MainWindow::chosenPort(QString s){
     ports[currentTab] = s;
 }
 
-
-
-
 void MainWindow::Disconnect(QString portName)
 {
     for(int i=0; i<MAX_TABS;i++){
@@ -117,7 +114,7 @@ void MainWindow::InitMixer(QString port)
     initWidgets[currentTab] = new InitWidget(port);
     serials[currentTab] = new Serial(port);
     connect(serials[currentTab], SIGNAL(profilesChanged(QList<quint16>)), initWidgets[currentTab], SLOT(refreshProfiles(QList<quint16>)));
-    connect(serials[currentTab], SIGNAL(statusChanged(uint16_t)), this, SLOT(statusChanged(uint16_t)));
+    connect(serials[currentTab], SIGNAL(stateChanged(uint16_t)), this, SLOT(statusChanged(uint16_t)));
     connect(initWidgets[currentTab], SIGNAL(Disconnect(QString)), this, SLOT(Disconnect(QString)));
     switchWidgets(initWidgets[currentTab], port);
 }

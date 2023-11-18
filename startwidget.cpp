@@ -9,16 +9,6 @@ StartWidget::StartWidget(QWidget *parent) : QWidget(parent), ui(new Ui::StartWid
     ui->setupUi(this);
     comPorts = ui->comPorts;
     connect(comPorts, SIGNAL(currentTextChanged(QString)), this, SLOT(CurrentChanged(QString)));
-    Reset();
-}
-
-StartWidget::~StartWidget()
-{
-
-}
-
-void StartWidget::Reset()
-{
     QList<QString> ports =  MainWindow::findMainWindow()->getAvailablePorts();
     if(ports.length() == 0){
         comPorts->addItem("No mixer found");
@@ -32,6 +22,33 @@ void StartWidget::Reset()
     }
     foreach(auto &x,ports)
         comPorts->addItem(x);
+    comPorts->setCurrentIndex(0);
+}
+
+StartWidget::~StartWidget()
+{
+
+}
+
+void StartWidget::Reset()
+{
+    QList<QString> ports =  MainWindow::findMainWindow()->getAvailablePorts();
+    if(ports.length() == 0){
+        comPorts->setItemText(0, "No mixer found");
+    } else{
+        if(comPorts->count() == 0){
+            comPorts->setItemText(0, "Select...");
+        }
+    }
+    foreach(auto &x,ports){
+        bool b = true;
+        for(int j=1;j<comPorts->count();j++){
+            if(comPorts->itemText(j) == x)
+                b = false;
+        }
+        if(b)
+            comPorts->addItem(x);
+    }
     comPorts->setCurrentIndex(0);
 }
 

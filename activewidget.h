@@ -23,22 +23,26 @@ public:
     ~ActiveWidget();
 
 private slots:
-    void recieveValue(uint16_t);
+    void updateMotor(uint16_t);
+    void updateBucket(uint16_t);
+    void updateArmAngle(uint16_t);
+    void updateTime(uint16_t);
+    void disconnect();
     void updateChart();
 
 
 private:
     Ui::ActiveWidget *ui;
     QString comPort;
-    QLCDNumber *speedLCD, *timeLCD;
+    QLCDNumber *lcd_armAngle, *lcd_time;
 
     QChart *chart;
     QVBoxLayout *chartLayout;
     QTimer *updateTimer;
     QDateTimeAxis *axisX;
     QValueAxis *axisY;
-    QLineSeries *series;
-    int value=0;
+    QLineSeries *series1, *series2;
+    int m, b =0;
     float time = 50.0f;
     Serial *serial;
 };

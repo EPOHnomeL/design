@@ -19,12 +19,13 @@ public:
     QString getPortName() const;
 
 signals:
-    void statusChanged(uint16_t);
-    void rpmChanged(uint16_t);
+    void stateChanged(uint16_t);
+    void currentProfileChanged(uint16_t);
+    void motorRPMChanged(uint16_t);
+    void bucketRPMChanged(uint16_t);
+    void armAngleChanged(uint16_t);
     void timeChanged(uint16_t);
     void profilesChanged(QList<quint16>);
-    void currentProfileChanged(uint16_t);
-    void currentSpeedChanged(uint16_t);
 
 private slots:
     void readRegister(QModbusDataUnit::RegisterType table, int address, int size);
