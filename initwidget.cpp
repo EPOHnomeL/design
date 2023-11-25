@@ -34,28 +34,57 @@ InitWidget::InitWidget(QString acomPort, QWidget *parent) : QWidget(parent), ui(
     e_time->setEnabled(false);
     e_motorDirection->setEnabled(false);
     e_bucketDirection->setEnabled(false);
-
-    QList<quint16> list = {1, 50, 300, 40, 90, 600, 1, 0, 2, 80, 500, 200, 60, 1000, 0, 1, 3, 20, 800, 200, 95, 200, 1, 1};
-    refreshProfiles(list);
+    prof1 = {1, 50, 300, 40, 90, 600, 1, 0};
+    prof2 = {2, 80, 500, 200, 60, 1000, 0, 1};
+    prof3 = {3, 20, 800, 200, 95, 200, 1, 1};
+    refreshProfiles(prof1, prof2, prof3);
 }
 
-void InitWidget::refreshProfiles(QList<quint16> profileData)
+void InitWidget::refreshProfiles(QList<quint16> aprof1,QList<quint16> aprof2,QList<quint16> aprof3)
 {
+    prof1 = aprof1;
+    prof2 = aprof2;
+    prof3 = aprof3;
     profiles.clear();
-    for(int i=0;i<3;i++){
-        Profile p = {.profileID = profileData.at(0+(i*8)),
-                     .waterPercentage=profileData.at(1+(i*8)),
-                     .motorRPM=profileData.at(2+(i*8)),
-                     .bucketRPM=profileData.at(3+(i*8)),
-                     .armAngle=profileData.at(4+(i*8)),
-                     .time=profileData.at(5+(i*8)),
-                     .motorRotation= (profileData.at(6+(i*8)) == 1),
-                     .bucketRotation = (profileData.at(7+(i*8)) == 1)};
-        profiles.append(p);
-        if(profilesBox->count() < 4){
-            profilesBox->addItem(QString("Profile %1").arg(p.profileID));
-        }
+    Profile p1 = {.profileID = aprof1.at(0),
+                 .waterPercentage=aprof1.at(1),
+                 .motorRPM=aprof1.at(2),
+                 .bucketRPM=aprof1.at(3),
+                 .armAngle=aprof1.at(4),
+                 .time=aprof1.at(5),
+                 .motorRotation= (aprof1.at(6) == 1),
+                 .bucketRotation = (aprof1.at(7) == 1)};
+    profiles.append(p1);
+    if(profilesBox->count() < 4){
+        profilesBox->addItem(QString("Profile %1").arg(p1.profileID));
     }
+
+    Profile p2 = {.profileID = aprof2.at(0),
+                 .waterPercentage=aprof2.at(1),
+                 .motorRPM=aprof2.at(2),
+                 .bucketRPM=aprof2.at(3),
+                 .armAngle=aprof2.at(4),
+                 .time=aprof2.at(5),
+                 .motorRotation= (aprof2.at(6) == 1),
+                 .bucketRotation = (aprof2.at(7) == 1)};
+    profiles.append(p2);
+    if(profilesBox->count() < 4){
+        profilesBox->addItem(QString("Profile %1").arg(p2.profileID));
+    }
+
+    Profile p3 = {.profileID = aprof3.at(0),
+                 .waterPercentage=aprof3.at(1),
+                 .motorRPM=aprof3.at(2),
+                 .bucketRPM=aprof3.at(3),
+                 .armAngle=aprof3.at(4),
+                 .time=aprof3.at(5),
+                 .motorRotation= (aprof3.at(6) == 1),
+                 .bucketRotation = (aprof3.at(7) == 1)};
+    profiles.append(p3);
+    if(profilesBox->count() < 4){
+        profilesBox->addItem(QString("Profile %1").arg(p3.profileID));
+    }
+
 }
 
 InitWidget::~InitWidget()
@@ -70,8 +99,17 @@ void InitWidget::DisconnectClicked()
 
 void InitWidget::ProfileSelect(QString s)
 {
-    if(s == "Select...")
+    if(s == "Select..."){
+        e_profId->setText("");
+        e_motorRPM->setText("");
+        e_bucketRPM->setText("");
+        e_waterPercentage->setText("");
+        e_armAngle->setText("");
+        e_time->setText("");
+        e_motorDirection->setText("");
+        e_bucketDirection->setText("");
         return;
+    }
     QString number = s[8];
     Profile p = {};
     foreach(auto &profile, profiles){
@@ -87,4 +125,22 @@ void InitWidget::ProfileSelect(QString s)
     e_time->setText(QString("%1").arg(p.time));
     e_motorDirection->setText(QString("%1").arg(p.motorRotation ? "Anti-Clockwise" : "Clockwise"));
     e_bucketDirection->setText(QString("%1").arg(p.bucketRotation ? "Anti-Clockwise" : "Clockwise"));
+}
+
+void InitWidget::refreshProfile1(QList<quint16> p)
+{
+    profilesBox->setCurrentIndex(0);
+    refreshProfiles(p, prof2, prof3);
+}
+
+void InitWidget::refreshProfile2(QList<quint16> p)
+{
+    profilesBox->setCurrentIndex(0);
+    refreshProfiles(prof1, p, prof3);
+}
+
+void InitWidget::refreshProfile3(QList<quint16> p)
+{
+    profilesBox->setCurrentIndex(0);
+    refreshProfiles(prof1, prof2, p);
 }

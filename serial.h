@@ -25,7 +25,9 @@ signals:
     void bucketRPMChanged(uint16_t);
     void armAngleChanged(uint16_t);
     void timeChanged(uint16_t);
-    void profilesChanged(QList<quint16>);
+    void profile1Changed(QList<quint16>);
+    void profile2Changed(QList<quint16>);
+    void profile3Changed(QList<quint16>);
 
 private slots:
     void readRegister(QModbusDataUnit::RegisterType table, int address, int size);

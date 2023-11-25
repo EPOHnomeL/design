@@ -78,7 +78,9 @@ void MainWindow::Disconnect(QString portName)
     }
     availablePorts.append(portName);
 
-    disconnect(serials[currentTab], SIGNAL(profilesChanged(QList<quint16>)), initWidgets[currentTab], SLOT(refreshProfiles(QList<quint16>)));
+    disconnect(serials[currentTab], SIGNAL(profile1Changed(QList<quint16>)), initWidgets[currentTab], SLOT(refreshProfile1(QList<quint16>)));
+    disconnect(serials[currentTab], SIGNAL(profile2Changed(QList<quint16>)), initWidgets[currentTab], SLOT(refreshProfile2(QList<quint16>)));
+    disconnect(serials[currentTab], SIGNAL(profile3Changed(QList<quint16>)), initWidgets[currentTab], SLOT(refreshProfile3(QList<quint16>)));
     disconnect(serials[currentTab], SIGNAL(stateChanged(uint16_t)), this, SLOT(statusChanged(uint16_t)));
     serials[currentTab]->disconnect();
     startWidgets[currentTab]->Reset();
@@ -93,7 +95,9 @@ void MainWindow::disconnectActive(QString p)
     disconnect(serials[currentTab], SIGNAL(bucketRPMChanged(uint16_t)), activeWidgets[currentTab], SLOT(updateBucket(uint16_t)));
     disconnect(serials[currentTab], SIGNAL(armAngleChanged(uint16_t)), activeWidgets[currentTab], SLOT(updateArmAngle(uint16_t)));
     disconnect(serials[currentTab], SIGNAL(timeChanged(uint16_t)), activeWidgets[currentTab], SLOT(updateTime(uint16_t)));
-    disconnect(serials[currentTab], SIGNAL(profilesChanged(QList<quint16>)), initWidgets[currentTab], SLOT(refreshProfiles(QList<quint16>)));
+    disconnect(serials[currentTab], SIGNAL(profile1Changed(QList<quint16>)), initWidgets[currentTab], SLOT(refreshProfile1(QList<quint16>)));
+    disconnect(serials[currentTab], SIGNAL(profile2Changed(QList<quint16>)), initWidgets[currentTab], SLOT(refreshProfile2(QList<quint16>)));
+    disconnect(serials[currentTab], SIGNAL(profile3Changed(QList<quint16>)), initWidgets[currentTab], SLOT(refreshProfile3(QList<quint16>)));
     disconnect(serials[currentTab], SIGNAL(stateChanged(uint16_t)), this, SLOT(statusChanged(uint16_t)));
     startWidgets[currentTab]->Reset();
     switchWidgets(startWidgets[currentTab]);
@@ -141,7 +145,9 @@ void MainWindow::InitMixer(QString port)
     }
     initWidgets[currentTab] = new InitWidget(port);
     serials[currentTab] = new Serial(port);
-    connect(serials[currentTab], SIGNAL(profilesChanged(QList<quint16>)), initWidgets[currentTab], SLOT(refreshProfiles(QList<quint16>)));
+    connect(serials[currentTab], SIGNAL(profile1Changed(QList<quint16>)), initWidgets[currentTab], SLOT(refreshProfile1(QList<quint16>)));
+    connect(serials[currentTab], SIGNAL(profile2Changed(QList<quint16>)), initWidgets[currentTab], SLOT(refreshProfile2(QList<quint16>)));
+    connect(serials[currentTab], SIGNAL(profile3Changed(QList<quint16>)), initWidgets[currentTab], SLOT(refreshProfile3(QList<quint16>)));
     connect(serials[currentTab], SIGNAL(stateChanged(uint16_t)), this, SLOT(statusChanged(uint16_t)));
     connect(initWidgets[currentTab], SIGNAL(Disconnect(QString)), this, SLOT(Disconnect(QString)));
     switchWidgets(initWidgets[currentTab], port);

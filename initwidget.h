@@ -23,7 +23,9 @@ public:
 public slots:
     void DisconnectClicked();
     void ProfileSelect(QString);
-    void refreshProfiles(QList<quint16>);
+    void refreshProfile1(QList<quint16>);
+    void refreshProfile2(QList<quint16>);
+    void refreshProfile3(QList<quint16>);
 
 signals:
     void Start(QString);
@@ -31,6 +33,9 @@ signals:
 
 private:
     Ui::InitWidget *ui;
+    QList<quint16> prof1;
+    QList<quint16> prof2;
+    QList<quint16> prof3;
     QPushButton *disconnectButton;
     QLineEdit *e_profId, *e_motorRPM, *e_bucketRPM, *e_waterPercentage, *e_armAngle, *e_time, *e_motorDirection, *e_bucketDirection;
     QComboBox *profilesBox;
@@ -40,6 +45,7 @@ private:
     bool editing = false;
     QString prevProfileName ="";
     Serial *serial;
+    void refreshProfiles(QList<quint16> prof1,QList<quint16> prof2,QList<quint16> prof3);
 };
 
 #endif // INITWIDGET_H
