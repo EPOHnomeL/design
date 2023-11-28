@@ -62,33 +62,35 @@ void Serial::readRegister(QModbusDataUnit::RegisterType table, int, int) {
         emit timeChanged(time.value(0));
     }
 
-    QModbusDataUnit profile1 = QModbusDataUnit(QModbusDataUnit::HoldingRegisters, 0x0010, 6);
+    QModbusDataUnit rotations = QModbusDataUnit(QModbusDataUnit::HoldingRegisters, 0x0006, 2);
+    if (modbusDevice->data(&rotations)) {
+        emit rotationsChanged(rotations.values());
+    }
+
+    QModbusDataUnit profile1 = QModbusDataUnit(QModbusDataUnit::HoldingRegisters, 0x0010, 8);
     QModbusDataUnit profile1Rotations = QModbusDataUnit(QModbusDataUnit::Coils, 0x0010, 2);
 
-    QModbusDataUnit profile2 = QModbusDataUnit(QModbusDataUnit::HoldingRegisters, 0x0020, 6);
+    QModbusDataUnit profile2 = QModbusDataUnit(QModbusDataUnit::HoldingRegisters, 0x0020, 8);
     QModbusDataUnit profile2Rotations = QModbusDataUnit(QModbusDataUnit::Coils, 0x0020, 2);
 
-    QModbusDataUnit profile3 = QModbusDataUnit(QModbusDataUnit::HoldingRegisters, 0x0030, 6);
+    QModbusDataUnit profile3 = QModbusDataUnit(QModbusDataUnit::HoldingRegisters, 0x0030, 8);
     QModbusDataUnit profile3Rotations = QModbusDataUnit(QModbusDataUnit::Coils, 0x0030, 2);
 
     if (modbusDevice->data(&profile1) || modbusDevice->data(&profile1Rotations)){
         QList<quint16> result;
         result.append(profile1.values());
-        result.append(profile1Rotations.values());
         emit profile1Changed(result);
     }
 
     if (modbusDevice->data(&profile2) || modbusDevice->data(&profile2Rotations)){
         QList<quint16> result;
         result.append(profile2.values());
-        result.append(profile2Rotations.values());
         emit profile2Changed(result);
     }
 
     if (modbusDevice->data(&profile3) || modbusDevice->data(&profile3Rotations)){
         QList<quint16> result;
         result.append(profile3.values());
-        result.append(profile3Rotations.values());
         emit profile3Changed(result);
     }
 }

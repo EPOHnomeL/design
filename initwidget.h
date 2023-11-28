@@ -37,9 +37,9 @@ private:
     QList<quint16> prof2;
     QList<quint16> prof3;
     QPushButton *disconnectButton;
-    QLineEdit *e_profId, *e_motorRPM, *e_bucketRPM, *e_waterPercentage, *e_armAngle, *e_time, *e_motorDirection, *e_bucketDirection;
+    QLineEdit *e_profId, *e_motorRPM, *e_bucketRPM, *e_waterPercentage, *e_armAngle, *e_time;
     QComboBox *profilesBox;
-    QLabel *statusLabel;
+    QLabel *statusLabel, *img_mr, *img_br;
     QString comPort;
     QList<Profile> profiles;
     bool editing = false;

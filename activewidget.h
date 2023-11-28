@@ -33,13 +33,14 @@ private slots:
     void updateTime(uint16_t);
     void disconnectThis();
     void updateChart();
+    void rotationsChanged(QList<uint16_t>);
 
 
 private:
     Ui::ActiveWidget *ui;
     QString comPort;
     QLCDNumber *lcd_armAngle, *lcd_time;
-
+    QLabel *statusLabel, *img_mr, *img_br;
     QChart *chart;
     QVBoxLayout *chartLayout;
     QTimer *updateTimer;

@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/rot">
+        <file>Anti-Clockwise.jpg</file>
+        <file>Clockwise.jpg</file>
+    </qresource>
+</RCC>

@@ -46,7 +46,7 @@
          <widget class="QLabel" name="label_2">
           <property name="font">
            <font>
-            <pointsize>20</pointsize>
+            <pointsize>16</pointsize>
            </font>
           </property>
           <property name="text">
@@ -59,7 +59,7 @@
           <property name="minimumSize">
            <size>
             <width>0</width>
-            <height>60</height>
+            <height>55</height>
            </size>
           </property>
           <property name="smallDecimalPoint">
@@ -75,7 +75,7 @@
          <widget class="QLabel" name="label_3">
           <property name="font">
            <font>
-            <pointsize>20</pointsize>
+            <pointsize>16</pointsize>
            </font>
           </property>
           <property name="text">
@@ -88,11 +88,77 @@
           <property name="minimumSize">
            <size>
             <width>0</width>
-            <height>60</height>
+            <height>55</height>
            </size>
           </property>
           <property name="smallDecimalPoint">
            <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_4">
+        <item>
+         <widget class="QLabel" name="label_4">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>55</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <pointsize>16</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>Motor Rotation:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="img_mr">
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>35</height>
+           </size>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_5">
+          <property name="font">
+           <font>
+            <pointsize>16</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>Bucket Rotation:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="img_br">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>35</height>
+           </size>
+          </property>
+          <property name="text">
+           <string/>
           </property>
          </widget>
         </item>

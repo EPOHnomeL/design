@@ -23,6 +23,7 @@ signals:
     void currentProfileChanged(uint16_t);
     void motorRPMChanged(uint16_t);
     void bucketRPMChanged(uint16_t);
+    void rotationsChanged(QList<uint16_t>);
     void armAngleChanged(uint16_t);
     void timeChanged(uint16_t);
     void profile1Changed(QList<quint16>);

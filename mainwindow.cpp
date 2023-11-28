@@ -95,6 +95,7 @@ void MainWindow::disconnectActive(QString p)
     disconnect(serials[currentTab], SIGNAL(bucketRPMChanged(uint16_t)), activeWidgets[currentTab], SLOT(updateBucket(uint16_t)));
     disconnect(serials[currentTab], SIGNAL(armAngleChanged(uint16_t)), activeWidgets[currentTab], SLOT(updateArmAngle(uint16_t)));
     disconnect(serials[currentTab], SIGNAL(timeChanged(uint16_t)), activeWidgets[currentTab], SLOT(updateTime(uint16_t)));
+    disconnect(serials[currentTab], SIGNAL(rotationsChanged(QList<uint16_t>)), activeWidgets[currentTab], SLOT(rotationsChanged(QList<uint16_t>)));
     disconnect(serials[currentTab], SIGNAL(profile1Changed(QList<quint16>)), initWidgets[currentTab], SLOT(refreshProfile1(QList<quint16>)));
     disconnect(serials[currentTab], SIGNAL(profile2Changed(QList<quint16>)), initWidgets[currentTab], SLOT(refreshProfile2(QList<quint16>)));
     disconnect(serials[currentTab], SIGNAL(profile3Changed(QList<quint16>)), initWidgets[currentTab], SLOT(refreshProfile3(QList<quint16>)));

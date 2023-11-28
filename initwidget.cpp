@@ -15,8 +15,15 @@ InitWidget::InitWidget(QString acomPort, QWidget *parent) : QWidget(parent), ui(
     e_waterPercentage = ui->e_waterPercentage;
     e_armAngle = ui->e_armAngle;
     e_time = ui->e_time;
-    e_motorDirection = ui->e_motorDirection;
-    e_bucketDirection = ui->e_bucketDirection;
+    img_mr = ui->img_mr;
+    img_br = ui->img_br;
+
+    // Load and set an image at runtime
+    QPixmap br(":/rot/Anti-Clockwise.jpg");
+    QPixmap scaledPixmap = br.scaledToHeight(img_mr->maximumHeight(), Qt::SmoothTransformation);
+    ui->img_br->setPixmap(scaledPixmap);
+    ui->img_mr->setPixmap(scaledPixmap);
+
     profilesBox = ui->profilesBox;
     profilesBox->addItem("Select...");
 
@@ -32,8 +39,6 @@ InitWidget::InitWidget(QString acomPort, QWidget *parent) : QWidget(parent), ui(
     e_waterPercentage->setEnabled(false);
     e_armAngle->setEnabled(false);
     e_time->setEnabled(false);
-    e_motorDirection->setEnabled(false);
-    e_bucketDirection->setEnabled(false);
     prof1 = {1, 50, 300, 40, 90, 600, 1, 0};
     prof2 = {2, 80, 500, 200, 60, 1000, 0, 1};
     prof3 = {3, 20, 800, 200, 95, 200, 1, 1};
@@ -106,8 +111,6 @@ void InitWidget::ProfileSelect(QString s)
         e_waterPercentage->setText("");
         e_armAngle->setText("");
         e_time->setText("");
-        e_motorDirection->setText("");
-        e_bucketDirection->setText("");
         return;
     }
     QString number = s[8];
@@ -123,8 +126,14 @@ void InitWidget::ProfileSelect(QString s)
     e_waterPercentage->setText(QString("%1").arg(p.waterPercentage));
     e_armAngle->setText(QString("%1").arg(p.armAngle));
     e_time->setText(QString("%1").arg(p.time));
-    e_motorDirection->setText(QString("%1").arg(p.motorRotation ? "Anti-Clockwise" : "Clockwise"));
-    e_bucketDirection->setText(QString("%1").arg(p.bucketRotation ? "Anti-Clockwise" : "Clockwise"));
+
+    QPixmap br(QString(":/rot/%1.jpg").arg(p.bucketRotation ? "Anti-Clockwise" : "Clockwise"));
+    QPixmap scaledPixmap1 = br.scaledToHeight(img_br->maximumHeight(), Qt::SmoothTransformation);
+    ui->img_br->setPixmap(scaledPixmap1);
+
+    QPixmap mr(QString(":/rot/%1.jpg").arg(p.motorRotation ? "Anti-Clockwise" : "Clockwise"));
+    QPixmap scaledPixmap2 = mr.scaledToHeight(img_mr->maximumHeight(), Qt::SmoothTransformation);
+    ui->img_mr->setPixmap(scaledPixmap2);
 }
 
 void InitWidget::refreshProfile1(QList<quint16> p)
