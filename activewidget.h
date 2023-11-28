@@ -50,6 +50,7 @@ private:
     int m, b =0;
     float time = 50.0f;
     Serial *serial;
+    QString data;
 };
 
 #endif // ACTIVEWIDGET_H

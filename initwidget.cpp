@@ -153,3 +153,9 @@ void InitWidget::refreshProfile3(QList<quint16> p)
     profilesBox->setCurrentIndex(0);
     refreshProfiles(prof1, prof2, p);
 }
+
+void InitWidget::currentProfileChanged(uint16_t i)
+{
+    if(i!=0)
+        statusLabel->setText(QString("Status: %1 Connected; Profile %2 Selected").arg(comPort).arg(i));
+}

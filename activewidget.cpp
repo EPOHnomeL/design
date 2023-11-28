@@ -53,9 +53,10 @@ ActiveWidget::ActiveWidget(QString acomPort, QWidget *parent) : QWidget(parent),
     chartView->setRenderHint(QPainter::Antialiasing);
     chartLayout->addWidget(chartView);
 
-
     serial = MainWindow::findMainWindow()->getSerialPort();
-
+    if(!serial){
+        serial = new Serial(acomPort);
+    }
 
     updateTimer = new QTimer(this);
     connect(updateTimer, SIGNAL(timeout()), this, SLOT(updateChart()));
@@ -63,7 +64,6 @@ ActiveWidget::ActiveWidget(QString acomPort, QWidget *parent) : QWidget(parent),
 
 ActiveWidget::~ActiveWidget()
 {
-
 
 }
 
@@ -74,7 +74,7 @@ void ActiveWidget::start()
 
 void ActiveWidget::updateBucket(uint16_t v)
 {
-        b = v;
+    b = v;
 }
 
 void ActiveWidget::updateArmAngle(uint16_t v)
@@ -113,6 +113,10 @@ void ActiveWidget::updateChart()
                     QDateTime::fromMSecsSinceEpoch(series1->at(series1->count() - 1).x()));
     axisY->setRange(0, 1000);
     chart->update();
+//    if(serial){
+//        qint64 time = serial->getTimer()->nsecsElapsed() / 1000000.0;;
+//        qDebug() << "Time (ms): "<< time ;
+//    }
 }
 
 void ActiveWidget::rotationsChanged(QList<uint16_t> r)

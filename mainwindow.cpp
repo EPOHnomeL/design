@@ -81,6 +81,7 @@ void MainWindow::Disconnect(QString portName)
     disconnect(serials[currentTab], SIGNAL(profile1Changed(QList<quint16>)), initWidgets[currentTab], SLOT(refreshProfile1(QList<quint16>)));
     disconnect(serials[currentTab], SIGNAL(profile2Changed(QList<quint16>)), initWidgets[currentTab], SLOT(refreshProfile2(QList<quint16>)));
     disconnect(serials[currentTab], SIGNAL(profile3Changed(QList<quint16>)), initWidgets[currentTab], SLOT(refreshProfile3(QList<quint16>)));
+    disconnect(serials[currentTab], SIGNAL(currentProfileChanged(quint16)), initWidgets[currentTab], SLOT(currentProfileChanged(quint16)));
     disconnect(serials[currentTab], SIGNAL(stateChanged(uint16_t)), this, SLOT(statusChanged(uint16_t)));
     serials[currentTab]->disconnect();
     startWidgets[currentTab]->Reset();
@@ -125,6 +126,7 @@ void MainWindow::statusChanged(uint16_t state)
             connect(serials[currentTab], SIGNAL(motorRPMChanged(uint16_t)), activeWidgets[currentTab], SLOT(updateMotor(uint16_t)));
             connect(serials[currentTab], SIGNAL(bucketRPMChanged(uint16_t)), activeWidgets[currentTab], SLOT(updateBucket(uint16_t)));
             connect(serials[currentTab], SIGNAL(armAngleChanged(uint16_t)), activeWidgets[currentTab], SLOT(updateArmAngle(uint16_t)));
+            connect(serials[currentTab], SIGNAL(rotationsChanged(QList<uint16_t>)), activeWidgets[currentTab], SLOT(rotationsChanged(QList<uint16_t>)));
             connect(serials[currentTab], SIGNAL(timeChanged(uint16_t)), activeWidgets[currentTab], SLOT(updateTime(uint16_t)));
             connect(activeWidgets[currentTab], SIGNAL(disconnectActive(QString)), this, SLOT(disconnectActive(QString)));
             activeWidgets[currentTab]->start();
@@ -149,6 +151,7 @@ void MainWindow::InitMixer(QString port)
     connect(serials[currentTab], SIGNAL(profile1Changed(QList<quint16>)), initWidgets[currentTab], SLOT(refreshProfile1(QList<quint16>)));
     connect(serials[currentTab], SIGNAL(profile2Changed(QList<quint16>)), initWidgets[currentTab], SLOT(refreshProfile2(QList<quint16>)));
     connect(serials[currentTab], SIGNAL(profile3Changed(QList<quint16>)), initWidgets[currentTab], SLOT(refreshProfile3(QList<quint16>)));
+    connect(serials[currentTab], SIGNAL(currentProfileChanged(quint16)), initWidgets[currentTab], SLOT(currentProfileChanged(quint16)));
     connect(serials[currentTab], SIGNAL(stateChanged(uint16_t)), this, SLOT(statusChanged(uint16_t)));
     connect(initWidgets[currentTab], SIGNAL(Disconnect(QString)), this, SLOT(Disconnect(QString)));
     switchWidgets(initWidgets[currentTab], port);

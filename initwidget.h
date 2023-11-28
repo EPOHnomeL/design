@@ -26,6 +26,7 @@ public slots:
     void refreshProfile1(QList<quint16>);
     void refreshProfile2(QList<quint16>);
     void refreshProfile3(QList<quint16>);
+    void currentProfileChanged(uint16_t);
 
 signals:
     void Start(QString);

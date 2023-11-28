@@ -3,4 +3,7 @@
         <file>Anti-Clockwise.jpg</file>
         <file>Clockwise.jpg</file>
     </qresource>
+    <qresource prefix="/text">
+        <file>data.txt</file>
+    </qresource>
 </RCC>

@@ -8,6 +8,7 @@
 #include <QDebug>
 #include <QModbusDataUnit>
 #include <QModbusRtuSerialServer>
+#include <QElapsedTimer>
 
 class Serial : public QObject
 {
@@ -17,6 +18,7 @@ public:
     ~Serial();
     void disconnect();
     QString getPortName() const;
+    QElapsedTimer *getTimer();
 
 signals:
     void stateChanged(uint16_t);
@@ -34,6 +36,7 @@ private slots:
     void readRegister(QModbusDataUnit::RegisterType table, int address, int size);
 
 private:
+    QElapsedTimer *timer;
     QString portName;
     void setupModbusDevice(QString);
     void readRegister();

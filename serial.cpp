@@ -2,6 +2,8 @@
 #include <QDebug>
 #include <QVariant>
 #include <QModbusReply>
+#include <QDateTime>
+
 
 Serial::Serial(QString aportName, QObject *parent) : QObject(parent)
 {
@@ -9,6 +11,7 @@ Serial::Serial(QString aportName, QObject *parent) : QObject(parent)
     setupModbusDevice(portName);
     connect(modbusDevice, SIGNAL(dataWritten(QModbusDataUnit::RegisterType,int,int)),
             this, SLOT(readRegister(QModbusDataUnit::RegisterType,int,int)));
+    timer = new QElapsedTimer();
 }
 
 void Serial::setupModbusDevice(QString portName) {
@@ -22,7 +25,6 @@ void Serial::setupModbusDevice(QString portName) {
 
     QModbusDataUnitMap reg;
     reg.insert(QModbusDataUnit::HoldingRegisters, { QModbusDataUnit::HoldingRegisters, 0x0000, 40 });
-    reg.insert(QModbusDataUnit::Coils, {QModbusDataUnit::Coils, 0x0030, 40});
     modbusDevice->setMap(reg);
     modbusDevice->connectDevice();
 }
@@ -44,6 +46,7 @@ void Serial::readRegister(QModbusDataUnit::RegisterType table, int, int) {
 
     QModbusDataUnit motorRPM = QModbusDataUnit(QModbusDataUnit::HoldingRegisters, 0x0002, 1);
     if (modbusDevice->data(&motorRPM)) {
+        timer->start();
         emit motorRPMChanged(motorRPM.value(0));
     }
 
@@ -68,27 +71,21 @@ void Serial::readRegister(QModbusDataUnit::RegisterType table, int, int) {
     }
 
     QModbusDataUnit profile1 = QModbusDataUnit(QModbusDataUnit::HoldingRegisters, 0x0010, 8);
-    QModbusDataUnit profile1Rotations = QModbusDataUnit(QModbusDataUnit::Coils, 0x0010, 2);
-
     QModbusDataUnit profile2 = QModbusDataUnit(QModbusDataUnit::HoldingRegisters, 0x0020, 8);
-    QModbusDataUnit profile2Rotations = QModbusDataUnit(QModbusDataUnit::Coils, 0x0020, 2);
-
     QModbusDataUnit profile3 = QModbusDataUnit(QModbusDataUnit::HoldingRegisters, 0x0030, 8);
-    QModbusDataUnit profile3Rotations = QModbusDataUnit(QModbusDataUnit::Coils, 0x0030, 2);
-
-    if (modbusDevice->data(&profile1) || modbusDevice->data(&profile1Rotations)){
+    if (modbusDevice->data(&profile1)){
         QList<quint16> result;
         result.append(profile1.values());
         emit profile1Changed(result);
     }
 
-    if (modbusDevice->data(&profile2) || modbusDevice->data(&profile2Rotations)){
+    if (modbusDevice->data(&profile2)){
         QList<quint16> result;
         result.append(profile2.values());
         emit profile2Changed(result);
     }
 
-    if (modbusDevice->data(&profile3) || modbusDevice->data(&profile3Rotations)){
+    if (modbusDevice->data(&profile3)){
         QList<quint16> result;
         result.append(profile3.values());
         emit profile3Changed(result);
@@ -98,6 +95,11 @@ void Serial::readRegister(QModbusDataUnit::RegisterType table, int, int) {
 QString Serial::getPortName() const
 {
     return portName;
+}
+
+QElapsedTimer *Serial::getTimer()
+{
+    return timer;
 }
 
 Serial::~Serial()
