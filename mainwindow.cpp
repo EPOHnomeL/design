@@ -112,7 +112,6 @@ void MainWindow::statusChanged(uint16_t state)
     }
     switch(state){
     case 3:
-        // connect current profile //
         if(!qobject_cast<InitWidget*>(tabWidget->currentWidget())) {
             switchWidgets(initWidgets[currentTab], ports[currentTab]);
         }
@@ -132,6 +131,9 @@ void MainWindow::statusChanged(uint16_t state)
             activeWidgets[currentTab]->start();
             switchWidgets(activeWidgets[currentTab], ports[currentTab]);
         }
+        break;
+    case 5:
+        disconnectActive(serials[currentTab]->getPortName());
         break;
     default:
         return;

@@ -57,8 +57,8 @@ void InitWidget::refreshProfiles(QList<quint16> aprof1,QList<quint16> aprof2,QLi
                  .bucketRPM=aprof1.at(3),
                  .armAngle=aprof1.at(4),
                  .time=aprof1.at(5),
-                 .motorRotation= (aprof1.at(6) == 1),
-                 .bucketRotation = (aprof1.at(7) == 1)};
+                 .motorRotation= (aprof1.at(7) == 1),
+                 .bucketRotation = (aprof1.at(6) == 1)};
     profiles.append(p1);
     if(profilesBox->count() < 4){
         profilesBox->addItem(QString("Profile %1").arg(p1.profileID));
@@ -70,8 +70,8 @@ void InitWidget::refreshProfiles(QList<quint16> aprof1,QList<quint16> aprof2,QLi
                  .bucketRPM=aprof2.at(3),
                  .armAngle=aprof2.at(4),
                  .time=aprof2.at(5),
-                 .motorRotation= (aprof2.at(6) == 1),
-                 .bucketRotation = (aprof2.at(7) == 1)};
+                 .motorRotation= (aprof2.at(7) == 1),
+                 .bucketRotation = (aprof2.at(6) == 1)};
     profiles.append(p2);
     if(profilesBox->count() < 4){
         profilesBox->addItem(QString("Profile %1").arg(p2.profileID));
@@ -83,13 +83,12 @@ void InitWidget::refreshProfiles(QList<quint16> aprof1,QList<quint16> aprof2,QLi
                  .bucketRPM=aprof3.at(3),
                  .armAngle=aprof3.at(4),
                  .time=aprof3.at(5),
-                 .motorRotation= (aprof3.at(6) == 1),
-                 .bucketRotation = (aprof3.at(7) == 1)};
+                 .motorRotation= (aprof3.at(7) == 1),
+                 .bucketRotation = (aprof3.at(6) == 1)};
     profiles.append(p3);
     if(profilesBox->count() < 4){
         profilesBox->addItem(QString("Profile %1").arg(p3.profileID));
     }
-
 }
 
 InitWidget::~InitWidget()
