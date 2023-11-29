@@ -24,7 +24,7 @@ void Serial::setupModbusDevice(QString portName) {
     modbusDevice->setServerAddress(1);
 
     QModbusDataUnitMap reg;
-    reg.insert(QModbusDataUnit::HoldingRegisters, { QModbusDataUnit::HoldingRegisters, 0x0000, 40 });
+    reg.insert(QModbusDataUnit::HoldingRegisters, { QModbusDataUnit::HoldingRegisters, 0x0000, 0x0040 });
     modbusDevice->setMap(reg);
     modbusDevice->connectDevice();
 }

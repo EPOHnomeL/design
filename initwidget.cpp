@@ -39,9 +39,9 @@ InitWidget::InitWidget(QString acomPort, QWidget *parent) : QWidget(parent), ui(
     e_waterPercentage->setEnabled(false);
     e_armAngle->setEnabled(false);
     e_time->setEnabled(false);
-    prof1 = {1, 50, 300, 40, 90, 600, 1, 0};
-    prof2 = {2, 80, 500, 200, 60, 1000, 0, 1};
-    prof3 = {3, 20, 800, 200, 95, 200, 1, 1};
+    prof1 = {1, 0 ,0, 0 ,0 ,0 ,0 ,0};
+    prof2 = {2, 0 ,0, 0 ,0 ,0 ,0 ,0};
+    prof3 = {3, 0 ,0, 0 ,0 ,0 ,0 ,0};
     refreshProfiles(prof1, prof2, prof3);
 }
 
@@ -113,11 +113,31 @@ void InitWidget::ProfileSelect(QString s)
         e_time->setText("");
         return;
     }
+
     QString number = s[8];
     Profile p = {};
+    bool recievedData = false;
     foreach(auto &profile, profiles){
-        if(profile.profileID == number.toInt())
+        if(profile.profileID == number.toInt()){
             p = profile;
+            if(p.waterPercentage != 0){
+                recievedData = true;
+            }
+        }
+    }
+
+    if(!recievedData){
+        e_profId->setText("Waiting for Data");
+        e_motorRPM->setText("");
+        e_bucketRPM->setText("");
+        e_waterPercentage->setText("");
+        e_armAngle->setText("");
+        e_time->setText("");
+        QPixmap br(":/rot/Anti-Clockwise.jpg");
+        QPixmap scaledPixmap = br.scaledToHeight(img_mr->maximumHeight(), Qt::SmoothTransformation);
+        ui->img_br->setPixmap(scaledPixmap);
+        ui->img_mr->setPixmap(scaledPixmap);
+        return;
     }
 
     e_profId->setText(QString("Profile %1").arg(p.profileID));
