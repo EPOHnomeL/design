@@ -133,6 +133,7 @@ void MainWindow::statusChanged(uint16_t state)
         }
         break;
     case 5:
+        // Show message check you machine
         disconnectActive(serials[currentTab]->getPortName());
         break;
     default:

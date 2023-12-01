@@ -84,7 +84,7 @@ void ActiveWidget::updateArmAngle(uint16_t v)
 
 void ActiveWidget::updateTime(uint16_t v)
 {
-    lcd_time->display(v/10.0f);
+    lcd_time->display(v/1.0f);
 }
 
 void ActiveWidget::disconnectThis()
